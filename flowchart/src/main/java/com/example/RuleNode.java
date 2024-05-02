@@ -79,7 +79,6 @@ public class RuleNode extends JLabel {
                     resizing = false;
                     setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
                 } else {
-
                     finishDragging(e);
                 }
             }
@@ -121,6 +120,8 @@ public class RuleNode extends JLabel {
                 int newHeight = Math.max(getHeight() + heightChange, 50); // Minimum height of 50
                 setSize(newWidth, newHeight);
                 initialClick = e.getPoint();
+                revalidate();
+                repaint();
             }
 
             private void handleDoubleClick() {

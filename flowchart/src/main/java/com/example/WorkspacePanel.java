@@ -13,79 +13,105 @@ import java.util.List;
 
 public class WorkspacePanel extends JPanel {
     private RuleNode draggingNode = null;
-    private Point draggingStartPoint;
     public final List<Connection> connections = new ArrayList<>();
+    private Point draggingStartPoint;
     private final AffineTransform viewTransform = new AffineTransform();
+    private Point viewOrigin = new Point(0, 0);
 
     public WorkspacePanel() {
         setBackground(Color.WHITE);
         setLayout(null); // Allows for absolute positioning
         // allow background to scroll with the panel
         setAutoscrolls(true);
-        addMouseEvents();
+
+        MouseHandler mouseHandler = new MouseHandler();
+        addMouseListener(mouseHandler);
+        addMouseMotionListener(mouseHandler);
+        addMouseWheelListener(mouseHandler);
     }
 
-    private void addMouseEvents() {
-        MouseAdapter mouseAdapter = new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                if (e.getButton() == MouseEvent.BUTTON3) { // Check if right-click
-                    Connection clickedConnection = findConnectionNearPoint(e.getPoint());
-                    if (clickedConnection != null) {
-                        showConnectionContextMenu(e, clickedConnection);
-                    }
-                } else if (draggingNode != null) {
-                    draggingNode = null;
-                    draggingStartPoint = null;
-                    repaint();
-                } else if (SwingUtilities.isMiddleMouseButton(e)) {
-                    setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
+    private class MouseHandler extends MouseAdapter {
+        private Point2D lastMouseDrag;
+        private final Point2D dragStart = new Point2D.Double();
+
+        @Override
+        public void mousePressed(MouseEvent e) {
+            lastMouseDrag = transformPointToModel(e.getPoint());
+            if (e.getButton() == MouseEvent.BUTTON3) { // Check if right-click
+                Connection clickedConnection = findConnectionNearPoint(e.getPoint());
+                if (clickedConnection != null) {
+                    showConnectionContextMenu(e, clickedConnection);
                 }
+            } else if (draggingNode != null) {
+                draggingNode = null;
+                draggingStartPoint = null;
+                repaint();
+            } else if (SwingUtilities.isMiddleMouseButton(e)) {
+                lastMouseDrag = transformPointToModel(e.getPoint());
+                dragStart.setLocation(e.getPoint());
+                repaint();
+                setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
+
             }
 
-            @Override
-            public void mouseDragged(MouseEvent e) {
-                if (draggingNode != null) {
-                    moveNode(e);
-                }
-            }
+        }
 
-            private void moveNode(MouseEvent e) {
-                Point2D transformedPoint = transformPointToModel(e.getPoint());
-                int deltaX = (int) (transformedPoint.getX() - draggingStartPoint.getX());
-                int deltaY = (int) (transformedPoint.getY() - draggingStartPoint.getY());
-
-                draggingNode.setLocation(draggingNode.getX() + deltaX, draggingNode.getY() + deltaY);
-                draggingStartPoint = e.getPoint();
+        @Override
+        public void mouseDragged(MouseEvent e) {
+            if (SwingUtilities.isMiddleMouseButton(e) && lastMouseDrag != null) {
+                Point2D dragEnd = e.getPoint();
+                double dx = dragEnd.getX() - dragStart.getX();
+                double dy = dragEnd.getY() - dragStart.getY();
+                viewTransform.translate(dx, dy);
+                dragStart.setLocation(dragEnd);
                 repaint();
             }
+        }
 
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                if (SwingUtilities.isMiddleMouseButton(e)) {
-                    setCursor(Cursor.getDefaultCursor()); // Reset cursor after panning
-                }
+        @Override
+        public void mouseWheelMoved(MouseWheelEvent e) {
+            double scale = Math.pow(1.1, -e.getWheelRotation());
+            Point2D p = transformPointToModel(e.getPoint());
+            viewTransform.translate(p.getX(), p.getY());
+            viewTransform.scale(scale, scale);
+            viewTransform.translate(-p.getX(), -p.getY());
+            repaint();
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent e) {
+            if (SwingUtilities.isMiddleMouseButton(e)) {
+                lastMouseDrag = null;
+                setCursor(Cursor.getDefaultCursor());
             }
+        }
 
-            @Override
-            public void mouseWheelMoved(MouseWheelEvent e) {
-                double scale = Math.pow(1.1, -e.getWheelRotation()); // Zoom in or out
-                Point2D p = e.getPoint();
-                viewTransform.translate(p.getX(), p.getY());
-                viewTransform.scale(scale, scale);
-                viewTransform.translate(-p.getX(), -p.getY());
-                repaint();
-            }
-        };
-
-        addMouseListener(mouseAdapter);
-        addMouseMotionListener(mouseAdapter);
-        addMouseWheelListener(mouseAdapter);
     }
 
     public void startDraggingForConnection(RuleNode node, Point start) {
         draggingNode = node;
         draggingStartPoint = SwingUtilities.convertPoint(node, start, this);
+    }
+
+    private void drawBackgroundGrid(Graphics2D g2) {
+        int dotInterval = 20;
+        g2.setColor(Color.LIGHT_GRAY);
+        int offsetX = viewOrigin.x % dotInterval;
+        int offsetY = viewOrigin.y % dotInterval;
+        for (int x = -offsetX; x < getWidth(); x += dotInterval) {
+            for (int y = -offsetY; y < getHeight(); y += dotInterval) {
+                g2.fillOval(x - 1, y - 1, 2, 2);
+            }
+        }
+        repaint();
+    }
+
+    private Point2D transformPointToModel(Point p) {
+        try {
+            return viewTransform.inverseTransform(p, null);
+        } catch (Exception ex) {
+            return p;
+        }
     }
 
     private Connection findConnectionNearPoint(Point point) {
@@ -96,14 +122,6 @@ public class WorkspacePanel extends JPanel {
             }
         }
         return null;
-    }
-
-    private Point2D transformPointToModel(Point2D p) {
-        try {
-            return viewTransform.inverseTransform(p, null);
-        } catch (Exception ex) {
-            return p; // Fallback: if transform fails, return original point
-        }
     }
 
     private boolean isNearConnection(Point point, Connection conn, int threshold) {
@@ -211,66 +229,59 @@ public class WorkspacePanel extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        Graphics2D g2d = (Graphics2D) g;
-        g2d.setTransform(viewTransform); // Apply the current view transformations
-
-        drawBackgroundGrid(g2d); // Draw the grid on the panel
-
-        // Iterate over connections to draw them
+        Graphics2D g2d = (Graphics2D) g; // Cast to use Graphics2D features
+        drawBackgroundGrid(g2d);
+        g2d.transform(viewTransform);
+        repaint();
         for (Connection conn : connections) {
             Point start = conn.getStartNode().getConnectionPoint();
             Point end = conn.getEndNode().getConnectionPoint();
             Rectangle endNodeBounds = conn.getEndNode().getBounds();
             g2d.setColor(Color.BLACK);
             g2d.drawLine(start.x, start.y, end.x, end.y);
-            drawArrow(g2d, start, end, endNodeBounds); // Draw arrow for each connection
+            drawArrow(g2d, start, end, endNodeBounds); // Call the drawArrow method here
 
-            // Draw connection labels (True/False)
+            // Draw connection type label
             int midX = (start.x + end.x) / 2;
             int midY = (start.y + end.y) / 2;
             g2d.drawString(conn.getType() ? "True" : "False", midX, midY);
         }
 
-        // Draw a line while dragging to create a new connection
+        // Draw line while dragging to create a new connection
         if (draggingNode != null && draggingStartPoint != null) {
             Point from = draggingNode.getConnectionPoint();
             g2d.setColor(Color.GREEN);
             g2d.drawLine(from.x, from.y, draggingStartPoint.x, draggingStartPoint.y);
         }
-    }
 
-    private void drawBackgroundGrid(Graphics2D g2) {
-        int dotInterval = 20; // Distance between dots
-        int dotSize = 2;
-        g2.setColor(Color.LIGHT_GRAY);
-
-        // Calculate offsets based on current view origin
-        int offsetX = Math.floorMod((int) viewTransform.getTranslateX(), dotInterval);
-        int offsetY = Math.floorMod((int) viewTransform.getTranslateY(), dotInterval);
-
-        for (int x = 0; x < getWidth(); x += dotInterval) {
-            for (int y = 0; y < getHeight(); y += dotInterval) {
-                g2.fillOval(x + offsetX - dotSize / 2, y + offsetY - dotSize / 2, dotSize, dotSize);
-            }
-        }
+        g2d.translate(-viewOrigin.x, -viewOrigin.y);
     }
 
     private void drawArrow(Graphics2D g2d, Point start, Point end, Rectangle targetNodeBounds) {
         int arrowLength = 12; // Length of the arrow head
-        double angle = Math.atan2(end.y - start.y, end.x - start.x);
+        // Calculate the direction of the line
+        double dx = end.x - start.x;
+        double dy = end.y - start.y;
+        double angle = Math.atan2(dy, dx);
 
-        // Calculate position for the arrowhead to draw
-        double x1 = end.x - arrowLength * Math.cos(angle - Math.PI / 6);
-        double y1 = end.y - arrowLength * Math.sin(angle - Math.PI / 6);
-        double x2 = end.x - arrowLength * Math.cos(angle + Math.PI / 6);
-        double y2 = end.y - arrowLength * Math.sin(angle + Math.PI / 6);
+        // Calculate intersection with the target node bounds
+        Point adjustedEnd = calculateIntersection(start, end, targetNodeBounds);
 
-        g2d.drawLine(end.x, end.y, (int) x1, (int) y1);
-        g2d.drawLine(end.x, end.y, (int) x2, (int) y2);
+        // Draw line
+        g2d.drawLine(start.x, start.y, adjustedEnd.x, adjustedEnd.y);
+
+        // Draw arrow head
+        double x1 = adjustedEnd.x - arrowLength * Math.cos(angle - Math.PI / 6);
+        double y1 = adjustedEnd.y - arrowLength * Math.sin(angle - Math.PI / 6);
+        double x2 = adjustedEnd.x - arrowLength * Math.cos(angle + Math.PI / 6);
+        double y2 = adjustedEnd.y - arrowLength * Math.sin(angle + Math.PI / 6);
+
+        g2d.drawLine(adjustedEnd.x, adjustedEnd.y, (int) x1, (int) y1);
+        g2d.drawLine(adjustedEnd.x, adjustedEnd.y, (int) x2, (int) y2);
     }
 
     private Point calculateIntersection(Point start, Point end, Rectangle bounds) {
-        // Logic to calculate the intersection of the line with node bounds
+        // Adjust method to handle horizontal and vertical lines
         double dx = end.x - start.x;
         double dy = end.y - start.y;
 
@@ -299,7 +310,7 @@ public class WorkspacePanel extends JPanel {
                 bounds.y + bounds.height
         };
 
-        // Find the closest point within the line segment
+        // Find closest point within the line segment
         Point closestPoint = new Point(end);
         double minDistance = Double.MAX_VALUE;
 
@@ -308,7 +319,7 @@ public class WorkspacePanel extends JPanel {
             double py = yPoints[i];
             if (px >= bounds.x && px <= bounds.x + bounds.width && py >= bounds.y && py <= bounds.y + bounds.height) {
                 double dist = Math.hypot(px - start.x, py - start.y);
-                if (dist < minDistance && dist < Math.hypot(dx, dy)) {
+                if (dist < minDistance && dist < Math.hypot(dx, dy)) { // Check within segment
                     minDistance = dist;
                     closestPoint.setLocation(px, py);
                 }
