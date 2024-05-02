@@ -1,17 +1,19 @@
 package com.example;
 
 import javax.swing.*;
-import javax.xml.namespace.QName;
 
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
 
 public class RuleNode extends JLabel {
     private static final int EDGE_THRESHOLD = 10; // Edge threshold for connections
     private Point initialClick; // Store initial click location for dragging calculations
     private String nodeName; // Store the actual node name without HTML tags
     private boolean resizing;
+    private final AffineTransform viewTransform = new AffineTransform();
 
     public RuleNode(String text) {
         super(text);
@@ -36,11 +38,14 @@ public class RuleNode extends JLabel {
         MouseAdapter mouseAdapter = new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                initialClick = e.getPoint();
+                Point2D transformedPoint = transformPointToModel(e.getPoint());
+                initialClick = new Point((int) transformedPoint.getX(), (int) transformedPoint.getY());
+                System.out.println("RuleNode: initialClick = " + initialClick);
                 if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount() == 2) {
                     handleDoubleClick();
                 } else if (SwingUtilities.isLeftMouseButton(e)) {
                     if (isNearCorner(initialClick)) {
+                        System.out.println("RuleNode: isNearCorner = " + isNearCorner(initialClick));
                         resizing = true;
                         setCursor(resizing ? Cursor.getPredefinedCursor(Cursor.SE_RESIZE_CURSOR)
                                 : Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
@@ -60,7 +65,6 @@ public class RuleNode extends JLabel {
 
             @Override
             public void mouseDragged(MouseEvent e) {
-
                 if (resizing) {
                     resizeNode(e);
                 } else {
@@ -130,6 +134,14 @@ public class RuleNode extends JLabel {
 
         addMouseListener(mouseAdapter);
         addMouseMotionListener(mouseAdapter);
+    }
+
+    private Point2D transformPointToModel(Point2D p) {
+        try {
+            return viewTransform.inverseTransform(p, null);
+        } catch (Exception ex) {
+            return p; // Fallback: if transform fails, return original point
+        }
     }
 
     public Rectangle getBounds() {
