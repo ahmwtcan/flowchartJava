@@ -1,6 +1,11 @@
 package com.example;
 
+import javax.accessibility.AccessibleContext;
 import javax.swing.*;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -8,16 +13,19 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class RuleNode extends JLabel {
     private static final int EDGE_THRESHOLD = 10; // Edge threshold for connections
-    private Point initialClick; // Store initial click location for dragging calculations
+    public Point initialClick; // Store initial click location for dragging calculations
     private String nodeName; // Store the actual node name without HTML tags
     private boolean resizing;
     private final AffineTransform viewTransform = new AffineTransform();
+    private int id;
 
-    public RuleNode(String text) {
+    public RuleNode(String text, NodeTypes type, int id) {
         super(text);
         nodeName = text;
+        this.id = id;
         initializeUI();
     }
 
@@ -34,6 +42,12 @@ public class RuleNode extends JLabel {
         addMouseEvents();
     }
 
+    @Override
+    @JsonIgnore
+    public AccessibleContext getAccessibleContext() {
+        return super.getAccessibleContext();
+    }
+
     private void addMouseEvents() {
         MouseAdapter mouseAdapter = new MouseAdapter() {
             @Override
@@ -42,7 +56,9 @@ public class RuleNode extends JLabel {
                 initialClick = new Point((int) transformedPoint.getX(), (int) transformedPoint.getY());
                 System.out.println("RuleNode: initialClick = " + initialClick);
                 if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount() == 2) {
+
                     handleDoubleClick();
+
                 } else if (SwingUtilities.isLeftMouseButton(e)) {
                     if (isNearCorner(initialClick)) {
                         System.out.println("RuleNode: isNearCorner = " + isNearCorner(initialClick));
@@ -54,12 +70,18 @@ public class RuleNode extends JLabel {
                 } else if (SwingUtilities.isRightMouseButton(e)) {
                     JPopupMenu popup = new JPopupMenu();
                     JMenuItem deleteItem = new JMenuItem("Delete");
+                    JMenuItem configurationItem = new JMenuItem("Configuration");
                     deleteItem.addActionListener(e1 -> {
                         WorkspacePanel panel = (WorkspacePanel) getParent();
                         panel.removeRuleNode(RuleNode.this);
                     });
+                    configurationItem.addActionListener(e1 -> configuration());
+                    popup.add(configurationItem);
+
                     popup.add(deleteItem);
                     popup.show(RuleNode.this, e.getX(), e.getY());
+
+                    repaint();
                 }
             }
 
@@ -124,20 +146,17 @@ public class RuleNode extends JLabel {
                 repaint();
             }
 
-            private void handleDoubleClick() {
-                String newName = JOptionPane.showInputDialog("Enter new name for the node:", nodeName);
-                if (newName != null && !newName.trim().isEmpty()) {
-                    nodeName = newName; // Update the plain text name
-                    updateText(); // Update the display text
-                }
-            }
         };
 
         addMouseListener(mouseAdapter);
         addMouseMotionListener(mouseAdapter);
     }
 
-    private Point2D transformPointToModel(Point2D p) {
+    public void configuration() {
+        // Override this method in subclasses to show configuration dialog
+    }
+
+    Point2D transformPointToModel(Point2D p) {
         try {
             return viewTransform.inverseTransform(p, null);
         } catch (Exception ex) {
@@ -145,6 +164,25 @@ public class RuleNode extends JLabel {
         }
     }
 
+    public void handleDoubleClick() {
+        String newName = JOptionPane.showInputDialog("Enter new name for the node:", nodeName);
+        if (newName != null && !newName.trim().isEmpty()) {
+            nodeName = newName; // Update the plain text name
+            updateText(); // Update the display text
+        }
+    }
+
+    @Override
+    public String getText() {
+        return nodeName;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    @Override
+    @JsonIgnore
     public Rectangle getBounds() {
         return new Rectangle(getX(), getY(), getWidth(), getHeight());
     }

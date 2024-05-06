@@ -7,28 +7,60 @@ public class Toolbar extends JToolBar {
     private JButton addRuleButton = new JButton("Add Rule");
     private JButton desicionButton = new JButton("Add Decision");
     private JButton resultButton = new JButton("Add Result");
+    private JButton startButton = new JButton("Add Start");
+    private JButton conditionButton = new JButton("Add Condition");
+    private JButton saveButton = new JButton("Save");
+    private JButton cgPaButton = new JButton("Add CGPA");
+    private int id = 0;
 
     public Toolbar(WorkspacePanel workspacePanel) {
         addRuleButton.addActionListener(e -> {
-            RuleNode newNode = new RuleNode("New Rule");
+            RuleNode newNode = new RuleNode("New Rule", NodeTypes.RULE, id++);
             newNode.setLocation(10, 10);
             workspacePanel.addRuleNode(newNode);
         });
 
         desicionButton.addActionListener(e -> {
-            RuleNode newNode = new DecisionNode("Decision");
+            RuleNode newNode = new DecisionNode("Decision", NodeTypes.DECISION, id++);
             newNode.setLocation(100, 100);
             workspacePanel.addRuleNode(newNode);
         });
 
         resultButton.addActionListener(e -> {
-            RuleNode newNode = new ResultNode("Result");
+            RuleNode newNode = new ResultNode("Result", NodeTypes.RESULT, id++);
             newNode.setLocation(200, 200);
             workspacePanel.addRuleNode(newNode);
         });
 
-        this.add(resultButton);
+        startButton.addActionListener(e -> {
+            RuleNode newNode = new StartNode("Start", NodeTypes.START, id++);
+            newNode.setLocation(300, 300);
+            workspacePanel.addRuleNode(newNode);
+        });
+
+        conditionButton.addActionListener(e -> {
+            RuleNode newNode = new ConditionNode("Condition", NodeTypes.RULE, id++);
+            newNode.setLocation(400, 400);
+            workspacePanel.addRuleNode(newNode);
+        });
+
+        cgPaButton.addActionListener(e -> {
+            RuleNode newNode = new CGPANode("CGPA", NodeTypes.CGPA, id++);
+            newNode.setLocation(500, 500);
+            workspacePanel.addRuleNode(newNode);
+        });
+
+        saveButton.addActionListener(e -> {
+            workspacePanel.save();
+        });
+
+        this.add(saveButton);
+        this.add(conditionButton);
+        this.add(startButton);
         this.add(desicionButton);
         this.add(addRuleButton);
+        this.add(resultButton);
+        this.add(cgPaButton);
+
     }
 }

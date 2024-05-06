@@ -1,0 +1,46 @@
+[
+    {
+        "id": "0",
+        "text": "Decision"
+    },
+    {
+        "id": "1",
+        "text": "Start"
+    },
+    {
+        "id": "2",
+        "text": "FF Grade Threshold: 1WrL Grade Threshold: 5 Table Course Threshold: 1Never Taken Threshold: 1"
+    },
+    {
+        "id": "3",
+        "text": "FF Grade Threshold: 4WrL Grade Threshold: 3 Table Course Threshold: 2Never Taken Threshold: 3"
+    },
+    {
+        "id": "5",
+        "text": "d1"
+    },
+    {
+        "id": "6",
+        "text": "<html><center>EK_SINAV</center></html>"
+    },
+    {
+        "id": "7",
+        "text": "<html><center>ILISIGI_KESILDI</center></html>"
+    },
+    {
+        "id": "8",
+        "text": "New Rule"
+    },
+    {
+        "id": "9",
+        "text": "CGPA Threshold: 2.0"
+    },
+    {
+        "id": "10",
+        "text": "<html><center>EK_SINAV</center></html>"
+    },
+    {
+        "id": "11",
+        "text": "<html><center>HAK_YOK</center></html>"
+    }
+]

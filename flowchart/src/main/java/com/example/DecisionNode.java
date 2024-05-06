@@ -3,32 +3,41 @@ package com.example;
 
 import java.awt.*;
 
+import javax.swing.BorderFactory;
+
 public class DecisionNode extends RuleNode {
 
-    public DecisionNode(String text) {
-        super(text);
-        setPreferredSize(new Dimension(120, 120)); // Suitable size for diamond shape
+    public DecisionNode(String text, NodeTypes type, int id) {
+        super(text, type, id);
+
+        // Set the preferred size of the decision node
+        setPreferredSize(new Dimension(160, 160));
+
+        setBorder(BorderFactory.createLineBorder(Color.BLACK));
+
     }
 
     @Override
     protected void paintComponent(Graphics g) {
+        int[] xPoints = { getWidth() / 2, 0, getWidth() / 2, getWidth() };
+        int[] yPoints = { 0, getHeight() / 2, getHeight(), getHeight() / 2 };
+        Polygon diamond = new Polygon(xPoints, yPoints, 4);
 
-        int w = getWidth();
-        int h = getHeight();
+        // Create a new Graphics object to avoid modifying the original
+        Graphics2D g2d = (Graphics2D) g.create();
 
-        // Define the points for a rotated diamond shape (90 degrees clockwise)
-        int[] xPoints = { h / 3, 0, h / 3, w };
-        int[] yPoints = { w / 3, w / 5, 3 * w / 4, w / 2 };
+        // Fill the diamond shape
+        g2d.setColor(getBackground());
+        g2d.fillPolygon(diamond);
 
-        // Fill the rotated diamond shape
-        g.setColor(getBackground());
-        g.fillPolygon(xPoints, yPoints, 4);
+        // Call super to draw the text field on top of the diamond shape
+        super.paintComponent(g2d);
 
-        // Draw the outline of the rotated diamond
-        g.setColor(getForeground());
-        g.drawPolygon(xPoints, yPoints, 4);
+        // Draw the diamond shape's border
+        g2d.setColor(getForeground());
+        g2d.drawPolygon(diamond);
 
-        super.paintComponent(g); // Call super to clear the background and setup.
-
+        // Dispose the graphics object
+        g2d.dispose();
     }
 }

@@ -7,9 +7,21 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
+import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 
 public class WorkspacePanel extends JPanel {
     private RuleNode draggingNode = null;
@@ -36,9 +48,14 @@ public class WorkspacePanel extends JPanel {
 
         @Override
         public void mousePressed(MouseEvent e) {
-            lastMouseDrag = transformPointToModel(e.getPoint());
+            super.mousePressed(e);
+
+            Point2D modelPoint = transformPointToModel(e.getPoint());
+            draggingStartPoint = new Point((int) modelPoint.getX(), (int) modelPoint.getY());
+            System.out.println("Mouse Pressed - Screen: " + e.getPoint() + ", Model: " + modelPoint);
+
             if (e.getButton() == MouseEvent.BUTTON3) { // Check if right-click
-                Connection clickedConnection = findConnectionNearPoint(e.getPoint());
+                Connection clickedConnection = findConnectionNearPoint(modelPoint);
                 if (clickedConnection != null) {
                     showConnectionContextMenu(e, clickedConnection);
                 }
@@ -56,27 +73,42 @@ public class WorkspacePanel extends JPanel {
 
         }
 
-        @Override
-        public void mouseDragged(MouseEvent e) {
-            if (SwingUtilities.isMiddleMouseButton(e) && lastMouseDrag != null) {
-                Point2D dragEnd = e.getPoint();
-                double dx = dragEnd.getX() - dragStart.getX();
-                double dy = dragEnd.getY() - dragStart.getY();
-                viewTransform.translate(dx, dy);
-                dragStart.setLocation(dragEnd);
-                repaint();
-            }
-        }
+        // @Override
+        // public void mouseDragged(MouseEvent e) {
+        // Point2D ptModel = transformPointToModel(e.getPoint());
+        // System.out.println("Dragged - Screen: " + e.getPoint() + ", Model: " +
+        // ptModel);
 
-        @Override
-        public void mouseWheelMoved(MouseWheelEvent e) {
-            double scale = Math.pow(1.1, -e.getWheelRotation());
-            Point2D p = transformPointToModel(e.getPoint());
-            viewTransform.translate(p.getX(), p.getY());
-            viewTransform.scale(scale, scale);
-            viewTransform.translate(-p.getX(), -p.getY());
-            repaint();
-        }
+        // if (SwingUtilities.isMiddleMouseButton(e)) {
+        // Point2D modelPoint = transformPointToModel(e.getPoint());
+        // Point2D lastPoint = lastMouseDrag;
+        // viewOrigin.translate((int) (modelPoint.getX() - lastPoint.getX()),
+        // (int) (modelPoint.getY() - lastPoint.getY()));
+        // lastMouseDrag = modelPoint;
+        // repaint();
+        // } else if (draggingNode != null) {
+        // Point currentPoint = SwingUtilities.convertPoint(draggingNode, e.getPoint(),
+        // WorkspacePanel.this);
+        // int deltaX = currentPoint.x - draggingStartPoint.x;
+        // int deltaY = currentPoint.y - draggingStartPoint.y;
+        // moveNode(draggingNode, deltaX, deltaY);
+        // } else if (draggingStartPoint != null) {
+        // dragConnection(e.getPoint());
+        // }
+
+        // }
+
+        // @Override
+        // public void mouseWheelMoved(MouseWheelEvent e) {
+        // // zoom in or out consider transform
+        // double scale = e.getWheelRotation() < 0 ? 1.1 : 0.9;
+        // Point2D p = transformPointToModel(e.getPoint());
+        // viewTransform.scale(scale, scale);
+        // viewTransform.translate(p.getX() - p.getX() * scale, p.getY() - p.getY() *
+        // scale);
+        // repaint();
+
+        // }
 
         @Override
         public void mouseReleased(MouseEvent e) {
@@ -103,19 +135,20 @@ public class WorkspacePanel extends JPanel {
                 g2.fillOval(x - 1, y - 1, 2, 2);
             }
         }
-        repaint();
     }
 
-    private Point2D transformPointToModel(Point p) {
+    Point2D transformPointToModel(Point p) {
         try {
             return viewTransform.inverseTransform(p, null);
-        } catch (Exception ex) {
-            return p;
+        } catch (NoninvertibleTransformException ex) {
+            System.err.println("Error inverting view transform: " + ex.getMessage());
+            return new Point2D.Double(p.x, p.y); // Return original point if inversion fails
         }
     }
 
-    private Connection findConnectionNearPoint(Point point) {
+    private Connection findConnectionNearPoint(Point2D point) {
         final int PROXIMITY_THRESHOLD = 5; // Adjust threshold as needed
+        point = transformPointToModel(new Point((int) point.getX(), (int) point.getY()));
         for (Connection conn : connections) {
             if (isNearConnection(point, conn, PROXIMITY_THRESHOLD)) {
                 return conn;
@@ -124,10 +157,12 @@ public class WorkspacePanel extends JPanel {
         return null;
     }
 
-    private boolean isNearConnection(Point point, Connection conn, int threshold) {
+    private boolean isNearConnection(Point2D point, Connection conn, int threshold) {
         Point start = conn.getStartNode().getConnectionPoint();
         Point end = conn.getEndNode().getConnectionPoint();
-        return Line2D.ptSegDist(start.x, start.y, end.x, end.y, point.x, point.y) <= threshold;
+        Line2D line = new Line2D.Double(start, end);
+        return line.ptSegDist(point) < threshold;
+
     }
 
     private void showConnectionContextMenu(MouseEvent e, Connection connection) {
@@ -142,10 +177,12 @@ public class WorkspacePanel extends JPanel {
     }
 
     public void addRuleNode(RuleNode node) {
-        this.add(node);
-        node.setLocation(node.getX(), node.getY()); // Ensure the node is positioned properly
-        node.setSize(node.getPreferredSize()); // Use the preferred size or a fixed size
-        repaint(); // Repaint the panel to show the new node
+        // add the node to the panel and set its location consider transform
+        Point2D modelPoint = transformPointToModel(node.getLocation());
+        node.setLocation((int) modelPoint.getX(), (int) modelPoint.getY());
+        add(node);
+        repaint();
+
     }
 
     public void startDraggingForMoving(RuleNode node, Point initialClick) {
@@ -154,10 +191,10 @@ public class WorkspacePanel extends JPanel {
     }
 
     public void moveNode(RuleNode node, int deltaX, int deltaY) {
-        int newX = node.getX() + deltaX;
-        int newY = node.getY() + deltaY;
-        node.setLocation(newX, newY);
-        repaint(); // Ensure updates are immediately visible
+        Point location = node.getLocation();
+        location.translate(deltaX, deltaY);
+        node.setLocation(location);
+        repaint();
     }
 
     public void dragConnection(Point current) {
@@ -226,18 +263,30 @@ public class WorkspacePanel extends JPanel {
         repaint();
     }
 
+    public AffineTransform getTransform() {
+        return viewTransform;
+    }
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        Graphics2D g2d = (Graphics2D) g; // Cast to use Graphics2D features
+
+        Graphics2D g2d = (Graphics2D) g.create(); // Cast to use Graphics2D features
+        g2d.transform(viewTransform); // Apply the view transform
+
         drawBackgroundGrid(g2d);
-        g2d.transform(viewTransform);
-        repaint();
+
         for (Connection conn : connections) {
-            Point start = conn.getStartNode().getConnectionPoint();
-            Point end = conn.getEndNode().getConnectionPoint();
-            Rectangle endNodeBounds = conn.getEndNode().getBounds();
-            g2d.setColor(Color.BLACK);
+            RuleNode startNode = conn.getStartNode();
+            RuleNode endNode = conn.getEndNode();
+            Point start = startNode.getConnectionPoint();
+            Point end = endNode.getConnectionPoint();
+            Rectangle endNodeBounds = endNode.getBounds();
+            if (conn.getType()) {
+                g2d.setColor(Color.GREEN);
+            } else {
+                g2d.setColor(Color.RED);
+            }
             g2d.drawLine(start.x, start.y, end.x, end.y);
             drawArrow(g2d, start, end, endNodeBounds); // Call the drawArrow method here
 
@@ -245,16 +294,23 @@ public class WorkspacePanel extends JPanel {
             int midX = (start.x + end.x) / 2;
             int midY = (start.y + end.y) / 2;
             g2d.drawString(conn.getType() ? "True" : "False", midX, midY);
+
+            // set color of the connection
+
         }
 
         // Draw line while dragging to create a new connection
         if (draggingNode != null && draggingStartPoint != null) {
             Point from = draggingNode.getConnectionPoint();
             g2d.setColor(Color.GREEN);
-            g2d.drawLine(from.x, from.y, draggingStartPoint.x, draggingStartPoint.y);
+
+            Point to = SwingUtilities.convertPoint(this, draggingStartPoint, this);
+            g2d.drawLine(from.x, from.y, to.x, to.y);
+            drawArrow(g2d, from, to, new Rectangle(to.x - 5, to.y - 5, 10, 10));
+
         }
 
-        g2d.translate(-viewOrigin.x, -viewOrigin.y);
+        g2d.dispose();
     }
 
     private void drawArrow(Graphics2D g2d, Point start, Point end, Rectangle targetNodeBounds) {
@@ -351,5 +407,69 @@ public class WorkspacePanel extends JPanel {
         public boolean getType() {
             return type;
         }
+    }
+
+    @JsonIgnoreProperties(value = { "accessibleContext", "toolkit", "graphicsConfiguration", "dropTarget",
+            "transferHandler", "actionMap", "inputMap", "componentPopupMenu", "appContext", "bufferStrategy",
+            "focusTraversalKeys", "mouseWheelListeners", "focusTraversalKeysEnabled", "focusCycleRoot",
+            "focusTraversalPolicyProvider", "focusTraversalPolicy", "focusTraversalPolicySet", "rootPane",
+            "contentPane", "parent", "graphics", "mouseMotionListeners", "mouseListeners", "focusListeners",
+            "keyListeners", "componentListeners", "insets", "popups", "opaque", "focusOwner", "autoscrolls",
+            "focusCycleRootAncestor", "bufferStrategy", "ignoreRepaint", "maxSize", "minSize", "peer", "valid",
+            "visible", "showing", "enabled", "doubleBuffered", "ignoreRepaint", "requestedFocus", "focusCycleRoot", })
+    public interface ComponentMixin {
+
+    }
+
+    public void save() {
+
+        // list nodes and connections
+        for (RuleNode node : getNodes()) {
+            System.out.println("Node: " + node.getText() + " id " + node.getId() + " at " + node.getLocation());
+        }
+
+        for (Connection conn : connections) {
+            System.out.println("Connection: " + conn.getStartNode().getText() + " id " + conn.getStartNode().getId()
+                    + " -> " + conn.getEndNode().getText() + " id " + conn.getEndNode().getId() + " "
+                    + conn.getType());
+        }
+
+        // Save nodes and connections to file
+        SimpleModule module = new SimpleModule();
+        module.addSerializer(RuleNode.class, new RuleNodeSerializer());
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(module);
+
+        mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+        mapper.addMixIn(Component.class, ComponentMixin.class);
+
+        // save nodes and connections to file export as json
+        try {
+            RuleNode[] nodes = getNodes();
+            List<Connection> connections = this.connections;
+
+            String nodesJson = mapper.writeValueAsString(nodes);
+            String connectionsJson = mapper.writeValueAsString(connections);
+            LocalDateTime now = LocalDateTime.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss");
+            String timestamp = now.format(formatter);
+
+            // Construct file paths with the timestamp
+            String nodesFilename = "nodes_" + timestamp + ".json";
+            String connectionsFilename = "connections_" + timestamp + ".json";
+            Files.write(Paths.get(nodesFilename), nodesJson.getBytes());
+            Files.write(Paths.get(connectionsFilename), connectionsJson.getBytes());
+
+        } catch (IOException e) {
+            System.err.println("Failed to save nodes or connections: " + e.getMessage());
+        }
+
+    }
+
+    private RuleNode[] getNodes() {
+        return Arrays.stream(getComponents())
+                .filter(c -> c instanceof RuleNode)
+                .map(c -> (RuleNode) c)
+                .toArray(RuleNode[]::new);
     }
 }
