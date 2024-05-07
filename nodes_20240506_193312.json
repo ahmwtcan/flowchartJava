@@ -1,0 +1,130 @@
+[
+    {
+        "id": "0",
+        "text": "Start"
+    },
+    {
+        "id": "3",
+        "text": "Azami öğretim süresini doldurdum"
+    },
+    {
+        "id": "5",
+        "text": "FF Grade Threshold: 0 WrL Grade Threshold: 1 Table Course Threshold: 0 Never Taken Threshold: 0"
+    },
+    {
+        "id": "6",
+        "text": "HAK_YOK"
+    },
+    {
+        "id": "7",
+        "text": "XX400 dersine kaydoldum ve \"P\" notu aldım "
+    },
+    {
+        "id": "9",
+        "text": "Programımdaki bütün dersleri aldım "
+    },
+    {
+        "id": "10",
+        "text": "FF Grade Threshold: 1 WrL Grade Threshold: 0 Table Course Threshold: 0 Never Taken Threshold: 0"
+    },
+    {
+        "id": "11",
+        "text": "FF Grade Threshold: 2 WrL Grade Threshold: 0 Table Course Threshold: 0 Never Taken Threshold: 0"
+    },
+    {
+        "id": "12",
+        "text": "CGPA Threshold: 2.0"
+    },
+    {
+        "id": "13",
+        "text": "HAK_YOK"
+    },
+    {
+        "id": "14",
+        "text": "FF Grade Threshold: 0 WrL Grade Threshold: 0 Table Course Threshold: 1 Never Taken Threshold: 0"
+    },
+    {
+        "id": "15",
+        "text": "EK_SINAV"
+    },
+    {
+        "id": "16",
+        "text": "HAK_YOK"
+    },
+    {
+        "id": "17",
+        "text": "Bir dersten not yükseltirsem not ortalamam 2.00 veya daha yüksek olacak"
+    },
+    {
+        "id": "18",
+        "text": "FF Grade Threshold: 0 WrL Grade Threshold: 0 Table Course Threshold: 1 Never Taken Threshold: 0"
+    },
+    {
+        "id": "19",
+        "text": "FF Grade Threshold: 0 WrL Grade Threshold: 5 Table Course Threshold: 1 Never Taken Threshold: 1"
+    },
+    {
+        "id": "20",
+        "text": "ILISIGI_KESILDI"
+    },
+    {
+        "id": "21",
+        "text": "Daha önce hakkımda EK SINAV , ve/ya DERSE BİR DEFA DEVAM kararı alındı"
+    },
+    {
+        "id": "22",
+        "text": "Bu hakları kullandım mı "
+    },
+    {
+        "id": "23",
+        "text": "HAK_YOK"
+    },
+    {
+        "id": "26",
+        "text": "FF Grade Threshold: 5 WrL Grade Threshold: 0 Table Course Threshold: 0 Never Taken Threshold: 0"
+    },
+    {
+        "id": "27",
+        "text": "ILISIGI_KESILDI"
+    },
+    {
+        "id": "28",
+        "text": "FF Grade Threshold: 1 WrL Grade Threshold: 1 Table Course Threshold: 1 Never Taken Threshold: 1"
+    },
+    {
+        "id": "29",
+        "text": "SINIRSIZ_SINAV"
+    },
+    {
+        "id": "30",
+        "text": "FF Grade Threshold: 5 WrL Grade Threshold: 5 Table Course Threshold: 5 Never Taken Threshold: 5"
+    },
+    {
+        "id": "31",
+        "text": "BELIRLI_DONEM_SINAV_HAKKI"
+    },
+    {
+        "id": "32",
+        "text": "EK_SINAV"
+    },
+    {
+        "id": "33",
+        "text": "FF Grade Threshold: 0 WrL Grade Threshold: 0 Table Course Threshold: 0 Never Taken Threshold: 0"
+    },
+    {
+        "id": "34",
+        "text": "CGPA Threshold: 2.0"
+    },
+    {
+        "id": "35",
+        "text": "HAK_YOK"
+    },
+    {
+        "id": "36",
+        "text": "FF Grade Threshold: 0 WrL Grade Threshold: 1 Table Course Threshold: 1 Never Taken Threshold: 1"
+    },
+    {
+        "id": "37",
+        "text": "BELIRLI_DONEM_SINAV_HAKKI"
+    }
+]

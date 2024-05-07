@@ -4,6 +4,7 @@ package com.example;
 import java.awt.*;
 
 import javax.swing.BorderFactory;
+import javax.swing.JOptionPane;
 
 public class DecisionNode extends RuleNode {
 
@@ -15,6 +16,27 @@ public class DecisionNode extends RuleNode {
 
         setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
+    }
+
+    @Override
+    public void handleDoubleClick() {
+        configuration();
+    }
+
+    @Override
+    public void configuration() {
+        // ask for the decision
+        // ask for the decision
+        String[] options = { "Yes", "No" };
+        int result = JOptionPane.showOptionDialog(null, "Is the student a US Citizen?", "Decision",
+                JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+
+        // If the user clicks OK, update the decision
+        if (result == 0) {
+            setText("Yes");
+        } else {
+            setText("No");
+        }
     }
 
     @Override

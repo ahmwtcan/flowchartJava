@@ -73,42 +73,36 @@ public class WorkspacePanel extends JPanel {
 
         }
 
-        // @Override
-        // public void mouseDragged(MouseEvent e) {
-        // Point2D ptModel = transformPointToModel(e.getPoint());
-        // System.out.println("Dragged - Screen: " + e.getPoint() + ", Model: " +
-        // ptModel);
+        @Override
+        public void mouseDragged(MouseEvent e) {
+            Point2D ptModel = transformPointToModel(e.getPoint());
+            System.out.println("Dragged - Screen: " + e.getPoint() + ", Model: " +
+                    ptModel);
 
-        // if (SwingUtilities.isMiddleMouseButton(e)) {
-        // Point2D modelPoint = transformPointToModel(e.getPoint());
-        // Point2D lastPoint = lastMouseDrag;
-        // viewOrigin.translate((int) (modelPoint.getX() - lastPoint.getX()),
-        // (int) (modelPoint.getY() - lastPoint.getY()));
-        // lastMouseDrag = modelPoint;
-        // repaint();
-        // } else if (draggingNode != null) {
-        // Point currentPoint = SwingUtilities.convertPoint(draggingNode, e.getPoint(),
-        // WorkspacePanel.this);
-        // int deltaX = currentPoint.x - draggingStartPoint.x;
-        // int deltaY = currentPoint.y - draggingStartPoint.y;
-        // moveNode(draggingNode, deltaX, deltaY);
-        // } else if (draggingStartPoint != null) {
-        // dragConnection(e.getPoint());
-        // }
+            if (SwingUtilities.isMiddleMouseButton(e)) {
+                // change the view origin
+                Point2D current = transformPointToModel(e.getPoint());
+                double dx = current.getX() - lastMouseDrag.getX();
+                double dy = current.getY() - lastMouseDrag.getY();
+                viewOrigin.setLocation(viewOrigin.getX() - dx, viewOrigin.getY() - dy);
+                lastMouseDrag = current;
+                revalidate();
+                repaint();
 
-        // }
+            }
+        }
 
-        // @Override
-        // public void mouseWheelMoved(MouseWheelEvent e) {
-        // // zoom in or out consider transform
-        // double scale = e.getWheelRotation() < 0 ? 1.1 : 0.9;
-        // Point2D p = transformPointToModel(e.getPoint());
-        // viewTransform.scale(scale, scale);
-        // viewTransform.translate(p.getX() - p.getX() * scale, p.getY() - p.getY() *
-        // scale);
-        // repaint();
+        @Override
+        public void mouseWheelMoved(MouseWheelEvent e) {
+            double scale = e.getWheelRotation() < 0 ? 1.1 : 0.9;
+            Point2D p = transformPointToModel(e.getPoint());
+            viewTransform.scale(scale, scale);
+            viewTransform.translate(p.getX() - p.getX() * scale, p.getY() - p.getY() *
+                    scale);
 
-        // }
+            revalidate();
+            repaint();
+        }
 
         @Override
         public void mouseReleased(MouseEvent e) {

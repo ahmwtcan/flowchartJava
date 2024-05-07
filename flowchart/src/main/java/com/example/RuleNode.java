@@ -205,7 +205,7 @@ public class RuleNode extends JLabel {
         g.fillRect(getWidth() - EDGE_THRESHOLD, getHeight() - EDGE_THRESHOLD, EDGE_THRESHOLD, EDGE_THRESHOLD);
     }
 
-    private void updateText() {
+    public void updateText() {
         setText("<html><center>" + nodeName + "</center></html>"); // Format text with HTML for display
     }
 

@@ -4,85 +4,52 @@ import javax.swing.*;
 import java.awt.*;
 
 public class ConditionNode extends RuleNode {
-    private int ffGradeThreshold = 1; // Default threshold for "FF" grades
-    private int wrLGradeThreshold = 5; // Default threshold for "WrL" grades
-    private int tableCourseThreshold = 1; // Default threshold for "Table Course" grades
-    private int neverTakenThreshold = 1; // Default threshold for "Never Taken" grades
+    private ThresholdType ffThresholdType = ThresholdType.FF_COUNT;
+    private int ffLowerLimit = 0;
+    private int ffUpperLimit = 1;
+
+    private boolean tableCourseFlag = false; // Flag for Table Course
 
     public ConditionNode(String text, NodeTypes type, int id) {
         super(text, type, id);
-        setPreferredSize(new Dimension(200, 100)); // Adjusted size for additional text
-
-        // Set the background color to light blue
+        setPreferredSize(new Dimension(250, 150));
         setBackground(new Color(173, 216, 230));
-
-        // Set the text color to black
         setForeground(Color.BLACK);
-
-        // Set the font size to 12
-        setFont(new Font("Arial", Font.PLAIN, 12));
-
-        // Update the text to display the current thresholds
-        updateText();
+        setFont(new Font("Arial", Font.BOLD, 12));
     }
 
     @Override
     public void handleDoubleClick() {
-        configuration();
+        SwingUtilities.invokeLater(this::configuration); // Ensure it's called on the EDT
     }
 
     @Override
     public void configuration() {
-        JTextField ffField = new JTextField(String.valueOf(ffGradeThreshold), 5);
-        JTextField wrLField = new JTextField(String.valueOf(wrLGradeThreshold), 5);
-        JTextField tableCourseField = new JTextField(String.valueOf(tableCourseThreshold), 5);
-        JTextField neverTakenField = new JTextField(String.valueOf(neverTakenThreshold), 5);
+        JComboBox<ThresholdType> ffTypeBox = new JComboBox<>(ThresholdType.values());
+        ffTypeBox.setSelectedItem(ffThresholdType);
+        JTextField ffLowerField = new JTextField(String.valueOf(ffLowerLimit), 5);
+        JTextField ffUpperField = new JTextField(String.valueOf(ffUpperLimit), 5);
+        JCheckBox tableCourseCheckBox = new JCheckBox("Table Course Flag", tableCourseFlag);
 
-        JPanel panel = new JPanel();
-        panel.add(new JLabel("FF Grade Threshold:"));
-        panel.add(ffField);
-        panel.add(Box.createHorizontalStrut(15)); // Spacer
-        panel.add(new JLabel("WrL Grade Threshold:"));
-        panel.add(wrLField);
-        panel.add(Box.createHorizontalStrut(15)); // Spacer
-        panel.add(new JLabel("Table Course Threshold:"));
-        panel.add(tableCourseField);
-        panel.add(Box.createHorizontalStrut(15)); // Spacer
-        panel.add(new JLabel("Never Taken Threshold:"));
-        panel.add(neverTakenField);
+        JPanel panel = new JPanel(new GridLayout(0, 1));
+        panel.add(new JLabel("FF Threshold Type:"));
+        panel.add(ffTypeBox);
+        panel.add(new JLabel("Lower Limit:"));
+        panel.add(ffLowerField);
+        panel.add(new JLabel("Upper Limit:"));
+        panel.add(ffUpperField);
+        panel.add(tableCourseCheckBox);
 
-        int result = JOptionPane.showConfirmDialog(null, panel,
-                "Configure Grade Thresholds", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-
+        int result = JOptionPane.showConfirmDialog(null, panel, "Configure Thresholds", JOptionPane.OK_CANCEL_OPTION,
+                JOptionPane.PLAIN_MESSAGE);
         if (result == JOptionPane.OK_OPTION) {
-            try {
-                ffGradeThreshold = Integer.parseInt(ffField.getText());
-                wrLGradeThreshold = Integer.parseInt(wrLField.getText());
-                tableCourseThreshold = Integer.parseInt(tableCourseField.getText());
-                neverTakenThreshold = Integer.parseInt(neverTakenField.getText());
-            } catch (NumberFormatException nfe) {
-                JOptionPane.showMessageDialog(null, "Please enter valid integers.");
-            }
+            ffThresholdType = (ThresholdType) ffTypeBox.getSelectedItem();
+            ffLowerLimit = Integer.parseInt(ffLowerField.getText());
+            ffUpperLimit = Integer.parseInt(ffUpperField.getText());
+            tableCourseFlag = tableCourseCheckBox.isSelected();
+
+            repaint(); // Repaint to update text after changes
         }
-    }
-
-    private void updateText() {
-
-        setText("<html><center>" +
-                "FF Grade Threshold: " + ffGradeThreshold + "<br>" +
-                "WrL Grade Threshold: " + wrLGradeThreshold + "<br>" +
-                "Table Course Threshold: " + tableCourseThreshold + "<br>" +
-                "Never Taken Threshold: " + neverTakenThreshold + "<br>" +
-                "</center></html>");
-    }
-
-    @Override
-    public String getText() {
-        return "FF Grade Threshold: " + ffGradeThreshold + " " +
-                "WrL Grade Threshold: " + wrLGradeThreshold + " " +
-                "Table Course Threshold: " + tableCourseThreshold + " " +
-                "Never Taken Threshold: " + neverTakenThreshold;
-
     }
 
     @Override
@@ -97,24 +64,25 @@ public class ConditionNode extends RuleNode {
         g.setColor(getForeground());
         g.setFont(getFont());
 
-        // Define lines of text
-        String[] lines = {
-                "FF Grade Threshold: " + ffGradeThreshold,
-                "WrL Grade Threshold: " + wrLGradeThreshold,
-                "Table Course Threshold: " + tableCourseThreshold,
-                "Never Taken Threshold: " + neverTakenThreshold
-        };
+        // Draw debugging frame
+        g.drawRect(0, 0, getWidth() - 1, getHeight() - 1);
 
-        // Calculate the starting y position for centered text
-        int y = (getHeight() - lines.length * g.getFontMetrics().getHeight()) / 2;
+        // Draw the text
+        String typeText = ffThresholdType.toString();
+        String rangeText = String.format("(%d < %d)", ffLowerLimit, ffUpperLimit);
+        String tableCourseText = "T.Course: " + (tableCourseFlag ? "Enabled" : "Disabled");
 
-        // Draw each line of text
-        for (String line : lines) {
-            int textWidth = g.getFontMetrics().stringWidth(line);
-            int x = (getWidth() - textWidth) / 2; // Center the text horizontally
-            g.drawString(line, x, y);
-            y += g.getFontMetrics().getHeight();
-        }
+        // Calculate y position based on font metrics
+        int typeY = 10 + g.getFontMetrics().getHeight();
+        int rangeY = typeY + g.getFontMetrics().getHeight();
+        int tableCourseY = rangeY + g.getFontMetrics().getHeight();
+
+        g.drawString(typeText, 5, typeY);
+        g.drawString(rangeText, 5, rangeY);
+        g.drawString(tableCourseText, 5, tableCourseY);
     }
 
+    public enum ThresholdType {
+        FF_COUNT, WrL_COUNT, FAILED_COUNT
+    }
 }

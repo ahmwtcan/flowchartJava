@@ -54,6 +54,11 @@ public class ResultNode extends RuleNode {
                 case ILISIGI_KESILDI:
                     setBackground(Color.GRAY);
                     break;
+                case DERSE_DEVAM:
+                    setBackground(Color.YELLOW);
+                    break;
+                default:
+                    break;
             }
 
             // Update the text and text color
@@ -90,6 +95,7 @@ public class ResultNode extends RuleNode {
         EK_SINAV,
         SINIRSIZ_SINAV,
         BELIRLI_DONEM_SINAV_HAKKI,
+        DERSE_DEVAM,
         HAK_YOK,
         ILISIGI_KESILDI
     }
