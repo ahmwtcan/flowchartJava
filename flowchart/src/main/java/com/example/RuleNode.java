@@ -196,8 +196,12 @@ public class RuleNode extends JLabel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.setColor(Color.RED);
-        g.fillRect(getWidth() - EDGE_THRESHOLD, getHeight() - EDGE_THRESHOLD, EDGE_THRESHOLD, EDGE_THRESHOLD);
+
+        // transform the graphics to the model coordinates
+        Graphics2D g2d = (Graphics2D) g;
+
+        g2d.setColor(Color.RED);
+        g2d.fillRect(getWidth() - EDGE_THRESHOLD, getHeight() - EDGE_THRESHOLD, EDGE_THRESHOLD, EDGE_THRESHOLD);
 
     }
 

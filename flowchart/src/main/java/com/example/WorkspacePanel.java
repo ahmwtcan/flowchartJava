@@ -260,23 +260,11 @@ public class WorkspacePanel extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        Graphics2D g2d = (Graphics2D) g; // Cast to use Graphics2D features
-        g2d.transform(viewTransform); // Apply the view transform
+        Graphics2D g2d = (Graphics2D) g.create(); // Cast to use Graphics2D features
+        g2d.translate(-viewOrigin.x, -viewOrigin.y);
+        g2d.transform(viewTransform);
 
         drawBackgroundGrid(g2d);
-
-        for (Component comp : getComponents()) {
-            if (comp instanceof RuleNode) {
-                RuleNode node = (RuleNode) comp;
-                Rectangle bounds = node.getBounds();
-                if (bounds.intersects(g.getClipBounds())) {
-
-                    node.paintComponent(g2d);
-
-                }
-
-            }
-        }
 
         for (Connection conn : connections) {
             RuleNode startNode = conn.getStartNode();

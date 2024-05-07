@@ -22,7 +22,7 @@ public class DecisionNode extends RuleNode {
         setForeground(Color.BLACK);
 
         // Set the font of the decision node
-        setFont(new Font("Arial", Font.PLAIN, 8));
+        setFont(new Font("Arial", Font.BOLD, 8));
 
     }
 
@@ -35,13 +35,13 @@ public class DecisionNode extends RuleNode {
 
         // Create a new Graphics object to avoid modifying the original
         Graphics2D g2d = (Graphics2D) g;
-        super.paintComponent(g2d);
 
         // Fill the diamond shape
         g2d.setColor(getBackground());
         g2d.fillPolygon(diamond);
 
         // Call super to draw the text field on top of the diamond shape
+        super.paintComponent(g2d);
 
         // Draw the diamond shape's border
         g2d.setColor(getForeground());

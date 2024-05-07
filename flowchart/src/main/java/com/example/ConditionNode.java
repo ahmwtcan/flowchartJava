@@ -16,6 +16,10 @@ public class ConditionNode extends RuleNode {
         setBackground(new Color(173, 216, 230));
         setForeground(Color.BLACK);
         setFont(new Font("Arial", Font.BOLD, 12));
+        this.ffThresholdType = ThresholdType.FF_COUNT; // Default value if not set elsewhere
+        this.ffLowerLimit = 0;
+        this.ffUpperLimit = 1;
+        this.tableCourseFlag = false;
     }
 
     @Override
@@ -47,13 +51,27 @@ public class ConditionNode extends RuleNode {
             ffLowerLimit = Integer.parseInt(ffLowerField.getText());
             ffUpperLimit = Integer.parseInt(ffUpperField.getText());
             tableCourseFlag = tableCourseCheckBox.isSelected();
-
+            updateNodeText(); // Update the text displayed on the node
             repaint(); // Repaint to update text after changes
         }
     }
 
     @Override
+    public String getText() {
+        return super.getText();
+
+    }
+
+    private void updateNodeText() {
+        String typeText = (ffThresholdType != null) ? ffThresholdType.toString() : "N/A";
+        String rangeText = String.format("(%d < %d)", ffLowerLimit, ffUpperLimit);
+        String tableCourseText = "T.Course: " + (tableCourseFlag ? "Enabled" : "Disabled");
+        setText(typeText + " " + rangeText + " " + tableCourseText);
+    }
+
+    @Override
     protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
 
         // Clear the background
         g.setColor(getBackground());
@@ -65,7 +83,6 @@ public class ConditionNode extends RuleNode {
 
         // Draw debugging frame
         g.drawRect(0, 0, getWidth() - 1, getHeight() - 1);
-        super.paintComponent(g);
 
         // Draw the text
         String typeText = ffThresholdType.toString();
