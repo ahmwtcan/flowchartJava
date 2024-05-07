@@ -10,8 +10,8 @@ public class ConditionNode extends RuleNode {
 
     private boolean tableCourseFlag = false; // Flag for Table Course
 
-    public ConditionNode(String text, NodeTypes type, int id) {
-        super(text, type, id);
+    public ConditionNode(String text, NodeTypes type, int id, WorkspacePanel panel) {
+        super(text, type, id, panel);
         setPreferredSize(new Dimension(250, 150));
         setBackground(new Color(173, 216, 230));
         setForeground(Color.BLACK);
@@ -54,7 +54,6 @@ public class ConditionNode extends RuleNode {
 
     @Override
     protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
 
         // Clear the background
         g.setColor(getBackground());
@@ -66,6 +65,7 @@ public class ConditionNode extends RuleNode {
 
         // Draw debugging frame
         g.drawRect(0, 0, getWidth() - 1, getHeight() - 1);
+        super.paintComponent(g);
 
         // Draw the text
         String typeText = ffThresholdType.toString();

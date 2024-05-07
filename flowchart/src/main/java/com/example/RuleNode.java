@@ -10,7 +10,6 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
@@ -19,14 +18,18 @@ public class RuleNode extends JLabel {
     public Point initialClick; // Store initial click location for dragging calculations
     private String nodeName; // Store the actual node name without HTML tags
     private boolean resizing;
-    private final AffineTransform viewTransform = new AffineTransform();
     private int id;
+    private WorkspacePanel panel;
 
-    public RuleNode(String text, NodeTypes type, int id) {
+    public RuleNode(String text, NodeTypes type, int id, WorkspacePanel panel) {
         super(text);
         nodeName = text;
         this.id = id;
+
+        this.panel = panel;
+
         initializeUI();
+
     }
 
     private void initializeUI() {
@@ -39,6 +42,7 @@ public class RuleNode extends JLabel {
         setPreferredSize(new Dimension(66, 60)); // Make nodes larger
         setSize(getPreferredSize());
         setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
+
         addMouseEvents();
     }
 
@@ -50,9 +54,11 @@ public class RuleNode extends JLabel {
 
     private void addMouseEvents() {
         MouseAdapter mouseAdapter = new MouseAdapter() {
+
             @Override
             public void mousePressed(MouseEvent e) {
-                Point2D transformedPoint = transformPointToModel(e.getPoint());
+                Point2D transformedPoint = panel.transformPointToModel(e.getPoint());
+                System.out.println("RuleNode: transformedPoint = " + transformedPoint);
                 initialClick = new Point((int) transformedPoint.getX(), (int) transformedPoint.getY());
                 System.out.println("RuleNode: initialClick = " + initialClick);
                 if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount() == 2) {
@@ -106,7 +112,6 @@ public class RuleNode extends JLabel {
             }
 
             private void startDragging(MouseEvent e) {
-                WorkspacePanel panel = (WorkspacePanel) getParent();
                 if (isNearEdge(initialClick)) {
                     setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
                     panel.startDraggingForConnection(RuleNode.this, e.getPoint());
@@ -117,7 +122,6 @@ public class RuleNode extends JLabel {
             }
 
             private void dragNode(MouseEvent e) {
-                WorkspacePanel panel = (WorkspacePanel) getParent();
                 if (isNearEdge(initialClick)) {
                     setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
                     panel.dragConnection(SwingUtilities.convertPoint(RuleNode.this, e.getPoint(), panel));
@@ -128,7 +132,6 @@ public class RuleNode extends JLabel {
             }
 
             private void finishDragging(MouseEvent e) {
-                WorkspacePanel panel = (WorkspacePanel) getParent();
                 if (isNearEdge(initialClick)) {
                     panel.completeConnection(SwingUtilities.convertPoint(RuleNode.this, e.getPoint(), panel));
                 }
@@ -154,14 +157,6 @@ public class RuleNode extends JLabel {
 
     public void configuration() {
         // Override this method in subclasses to show configuration dialog
-    }
-
-    Point2D transformPointToModel(Point2D p) {
-        try {
-            return viewTransform.inverseTransform(p, null);
-        } catch (Exception ex) {
-            return p; // Fallback: if transform fails, return original point
-        }
     }
 
     public void handleDoubleClick() {
@@ -203,6 +198,7 @@ public class RuleNode extends JLabel {
         super.paintComponent(g);
         g.setColor(Color.RED);
         g.fillRect(getWidth() - EDGE_THRESHOLD, getHeight() - EDGE_THRESHOLD, EDGE_THRESHOLD, EDGE_THRESHOLD);
+
     }
 
     public void updateText() {

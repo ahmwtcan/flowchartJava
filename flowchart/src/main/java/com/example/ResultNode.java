@@ -7,8 +7,8 @@ import javax.swing.JOptionPane;
 public class ResultNode extends RuleNode {
     private ExamRight examRight = ExamRight.EK_SINAV;
 
-    public ResultNode(String text, NodeTypes type, int id) {
-        super(text, type, id);
+    public ResultNode(String text, NodeTypes type, int id, WorkspacePanel panel) {
+        super(text, type, id, panel);
         setPreferredSize(new Dimension(160, 80)); // Typical size for a rectangle
 
         // set background color according to exam right

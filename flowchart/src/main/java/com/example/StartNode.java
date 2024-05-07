@@ -7,8 +7,8 @@ import java.awt.Graphics;
 
 public class StartNode extends RuleNode {
 
-    public StartNode(String text, NodeTypes type, int id) {
-        super(text, type, id);
+    public StartNode(String text, NodeTypes type, int id, WorkspacePanel panel) {
+        super(text, type, id, panel);
 
         // Set the preferred size of the start node
         setPreferredSize(new Dimension(80, 80));

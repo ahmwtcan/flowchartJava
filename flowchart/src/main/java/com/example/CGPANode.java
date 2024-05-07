@@ -7,8 +7,8 @@ import javax.swing.*;
 public class CGPANode extends RuleNode {
     private double cgpaThreshold;
 
-    public CGPANode(String text, NodeTypes type, int id) {
-        super(text, type, id);
+    public CGPANode(String text, NodeTypes type, int id, WorkspacePanel panel) {
+        super(text, type, id, panel);
 
         // Set the preferred size of the CGPA node
         setPreferredSize(new Dimension(160, 160));

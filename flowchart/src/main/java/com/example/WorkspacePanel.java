@@ -75,18 +75,13 @@ public class WorkspacePanel extends JPanel {
 
         @Override
         public void mouseDragged(MouseEvent e) {
-            Point2D ptModel = transformPointToModel(e.getPoint());
-            System.out.println("Dragged - Screen: " + e.getPoint() + ", Model: " +
-                    ptModel);
-
-            if (SwingUtilities.isMiddleMouseButton(e)) {
+            if (SwingUtilities.isMiddleMouseButton(e) && lastMouseDrag != null) {
                 // change the view origin
-                Point2D current = transformPointToModel(e.getPoint());
-                double dx = current.getX() - lastMouseDrag.getX();
-                double dy = current.getY() - lastMouseDrag.getY();
-                viewOrigin.setLocation(viewOrigin.getX() - dx, viewOrigin.getY() - dy);
-                lastMouseDrag = current;
-                revalidate();
+                Point2D dragEnd = e.getPoint();
+                double dx = dragEnd.getX() - dragStart.getX();
+                double dy = dragEnd.getY() - dragStart.getY();
+                viewTransform.translate(dx, dy);
+                dragStart.setLocation(dragEnd);
                 repaint();
 
             }
@@ -265,10 +260,23 @@ public class WorkspacePanel extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        Graphics2D g2d = (Graphics2D) g.create(); // Cast to use Graphics2D features
+        Graphics2D g2d = (Graphics2D) g; // Cast to use Graphics2D features
         g2d.transform(viewTransform); // Apply the view transform
 
         drawBackgroundGrid(g2d);
+
+        for (Component comp : getComponents()) {
+            if (comp instanceof RuleNode) {
+                RuleNode node = (RuleNode) comp;
+                Rectangle bounds = node.getBounds();
+                if (bounds.intersects(g.getClipBounds())) {
+
+                    node.paintComponent(g2d);
+
+                }
+
+            }
+        }
 
         for (Connection conn : connections) {
             RuleNode startNode = conn.getStartNode();
@@ -288,8 +296,6 @@ public class WorkspacePanel extends JPanel {
             int midX = (start.x + end.x) / 2;
             int midY = (start.y + end.y) / 2;
             g2d.drawString(conn.getType() ? "True" : "False", midX, midY);
-
-            // set color of the connection
 
         }
 
