@@ -29,6 +29,9 @@ public class WorkspacePanel extends JPanel {
     private Point draggingStartPoint;
     private final AffineTransform viewTransform = new AffineTransform();
     private Point viewOrigin = new Point(0, 0);
+    private double currentScale = 1.0; // Track current scale
+    private final double minScale = 0.1; // Minimum scale factor
+    private final double maxScale = 10.0; // Maximum scale factor
 
     public WorkspacePanel() {
         setBackground(Color.WHITE);
@@ -65,7 +68,7 @@ public class WorkspacePanel extends JPanel {
                 repaint();
             } else if (SwingUtilities.isMiddleMouseButton(e)) {
                 lastMouseDrag = transformPointToModel(e.getPoint());
-                dragStart.setLocation(e.getPoint());
+                dragStart.setLocation(lastMouseDrag);
                 repaint();
                 setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
 
@@ -85,6 +88,16 @@ public class WorkspacePanel extends JPanel {
                 double dx = current.getX() - lastMouseDrag.getX();
                 double dy = current.getY() - lastMouseDrag.getY();
                 viewOrigin.setLocation(viewOrigin.getX() - dx, viewOrigin.getY() - dy);
+
+                // update component positions
+                for (Component comp : getComponents()) {
+                    if (comp instanceof RuleNode) {
+                        RuleNode node = (RuleNode) comp;
+                        Point loc = node.getLocation();
+                        node.setLocation((int) (loc.x - dx), (int) (loc.y - dy));
+                    }
+                }
+
                 lastMouseDrag = current;
                 revalidate();
                 repaint();
@@ -92,17 +105,33 @@ public class WorkspacePanel extends JPanel {
             }
         }
 
-        @Override
-        public void mouseWheelMoved(MouseWheelEvent e) {
-            double scale = e.getWheelRotation() < 0 ? 1.1 : 0.9;
-            Point2D p = transformPointToModel(e.getPoint());
-            viewTransform.scale(scale, scale);
-            viewTransform.translate(p.getX() - p.getX() * scale, p.getY() - p.getY() *
-                    scale);
+        // @Override
+        // public void mouseWheelMoved(MouseWheelEvent e) {
+        // double scaleDelta = e.getWheelRotation() < 0 ? 1.1 : 0.9;
+        // double newScale = currentScale * scaleDelta;
 
-            revalidate();
-            repaint();
-        }
+        // // Clamp the scale to prevent too much zoom in or out
+        // if (newScale < minScale) {
+        // scaleDelta = minScale / currentScale;
+        // } else if (newScale > maxScale) {
+        // scaleDelta = maxScale / currentScale;
+        // }
+
+        // currentScale *= scaleDelta; // Update current scale
+
+        // Point2D p = e.getPoint();
+        // try {
+        // Point2D transformedPoint = viewTransform.inverseTransform(p, null);
+        // viewTransform.translate(transformedPoint.getX(), transformedPoint.getY());
+        // viewTransform.scale(scaleDelta, scaleDelta);
+        // viewTransform.translate(-transformedPoint.getX(), -transformedPoint.getY());
+        // } catch (NoninvertibleTransformException ex) {
+        // ex.printStackTrace();
+        // }
+
+        // updateNodePositionsAndSizes(scaleDelta);
+        // repaint();
+        // }
 
         @Override
         public void mouseReleased(MouseEvent e) {
@@ -269,7 +298,15 @@ public class WorkspacePanel extends JPanel {
         g2d.transform(viewTransform); // Apply the view transform
 
         drawBackgroundGrid(g2d);
-
+        for (Component comp : getComponents()) {
+            if (comp instanceof RuleNode) {
+                RuleNode node = (RuleNode) comp;
+                Graphics2D gNode = (Graphics2D) g2d.create();
+                gNode.translate(node.getX(), node.getY());
+                node.paint(gNode);
+                gNode.dispose();
+            }
+        }
         for (Connection conn : connections) {
             RuleNode startNode = conn.getStartNode();
             RuleNode endNode = conn.getEndNode();

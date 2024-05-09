@@ -212,4 +212,14 @@ public class RuleNode extends JLabel {
     public Point getConnectionPoint() {
         return new Point(getX() + getWidth() / 2, getY() + getHeight() / 2);
     }
+
+    public Dimension getOriginalSize() {
+
+        return getPreferredSize();
+    }
+
+    public Point getOriginalLocation() {
+
+        return getLocation();
+    }
 }

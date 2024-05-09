@@ -23,7 +23,7 @@ public class StartNode extends RuleNode {
         setText("<html><center>" + text + "</center></html>");
 
         // Set the font of the start node
-        setFont(new Font("Arial", Font.PLAIN, 8));
+        setFont(new Font("Arial", Font.BOLD, 8));
 
     }
 

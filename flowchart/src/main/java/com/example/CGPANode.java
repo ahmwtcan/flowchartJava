@@ -20,7 +20,7 @@ public class CGPANode extends RuleNode {
         setForeground(Color.BLACK);
 
         // Set the font of the CGPA node
-        setFont(new Font("Arial", Font.PLAIN, 8));
+        setFont(new Font("Arial", Font.BOLD, 8));
 
     }
 
@@ -77,7 +77,8 @@ public class CGPANode extends RuleNode {
         // Call super to draw the text field on top of the CGPA node
         super.paintComponent(g);
 
-        String text = "<html><center>CGPA Threshold: " + cgpaThreshold + "<br>";
+        String text = "<html><center>CGPA Threshold: " + cgpaThreshold + "</center></html>";
+
         setText(text);
 
     }
