@@ -37,8 +37,5 @@ public class StartNode extends RuleNode {
         g.setColor(getForeground());
         g.drawRect(0, 0, getWidth(), getHeight());
 
-        // Call super to draw the text field on top of the start node
-        super.paintComponent(g);
-
     }
 }

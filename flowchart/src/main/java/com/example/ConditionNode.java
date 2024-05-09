@@ -71,7 +71,6 @@ public class ConditionNode extends RuleNode {
 
     @Override
     protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
 
         // Clear the background
         g.setColor(getBackground());

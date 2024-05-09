@@ -95,8 +95,7 @@ public class WorkspacePanel extends JPanel {
             viewTransform.translate(p.getX() - p.getX() * scale, p.getY() - p.getY() *
                     scale);
 
-            revalidate();
-            repaint();
+            setZoomLevel(scale);
         }
 
         @Override
@@ -170,8 +169,6 @@ public class WorkspacePanel extends JPanel {
         Point2D modelPoint = transformPointToModel(node.getLocation());
         node.setLocation((int) modelPoint.getX(), (int) modelPoint.getY());
         add(node);
-        repaint();
-
     }
 
     public void startDraggingForMoving(RuleNode node, Point initialClick) {
@@ -183,12 +180,10 @@ public class WorkspacePanel extends JPanel {
         Point location = node.getLocation();
         location.translate(deltaX, deltaY);
         node.setLocation(location);
-        repaint();
     }
 
     public void dragConnection(Point current) {
         draggingStartPoint = current;
-        repaint();
     }
 
     public void completeConnection(Point releaseAt) {
@@ -256,46 +251,47 @@ public class WorkspacePanel extends JPanel {
         return viewTransform;
     }
 
+    public void setZoomLevel(double scale) {
+        viewTransform.scale(scale, scale);
+        for (Component comp : getComponents()) {
+            if (comp instanceof RuleNode) {
+                RuleNode node = (RuleNode) comp;
+                Dimension originalSize = node.getOriginalSize();
+                Point originalLocation = node.getOriginalLocation();
+                node.setSize((int) (originalSize.width * scale), (int) (originalSize.height * scale));
+                node.setLocation((int) (originalLocation.x * scale), (int) (originalLocation.y * scale));
+            }
+        }
+        repaint();
+    }
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
+        Graphics2D g2d = (Graphics2D) g.create();
 
-        Graphics2D g2d = (Graphics2D) g.create(); // Cast to use Graphics2D features
-        g2d.translate(-viewOrigin.x, -viewOrigin.y);
+        // Apply the view transform
         g2d.transform(viewTransform);
 
         drawBackgroundGrid(g2d);
 
-        for (Connection conn : connections) {
-            RuleNode startNode = conn.getStartNode();
-            RuleNode endNode = conn.getEndNode();
-            Point start = startNode.getConnectionPoint();
-            Point end = endNode.getConnectionPoint();
-            Rectangle endNodeBounds = endNode.getBounds();
-            if (conn.getType()) {
-                g2d.setColor(Color.GREEN);
-            } else {
-                g2d.setColor(Color.RED);
+        for (Component comp : getComponents()) {
+            if (comp instanceof RuleNode) {
+                RuleNode node = (RuleNode) comp;
+                node.paint(g2d);
             }
-            g2d.drawLine(start.x, start.y, end.x, end.y);
-            drawArrow(g2d, start, end, endNodeBounds); // Call the drawArrow method here
-
-            // Draw connection type label
-            int midX = (start.x + end.x) / 2;
-            int midY = (start.y + end.y) / 2;
-            g2d.drawString(conn.getType() ? "True" : "False", midX, midY);
-
         }
 
-        // Draw line while dragging to create a new connection
         if (draggingNode != null && draggingStartPoint != null) {
-            Point from = draggingNode.getConnectionPoint();
-            g2d.setColor(Color.GREEN);
+            Point startPoint = SwingUtilities.convertPoint(this, draggingStartPoint, draggingNode);
+            g2d.setColor(Color.BLACK);
+            g2d.drawLine(startPoint.x, startPoint.y, draggingStartPoint.x, draggingStartPoint.y);
+        }
 
-            Point to = SwingUtilities.convertPoint(this, draggingStartPoint, this);
-            g2d.drawLine(from.x, from.y, to.x, to.y);
-            drawArrow(g2d, from, to, new Rectangle(to.x - 5, to.y - 5, 10, 10));
-
+        for (Connection conn : connections) {
+            Point start = conn.getStartNode().getConnectionPoint();
+            Point end = conn.getEndNode().getConnectionPoint();
+            drawArrow(g2d, start, end, conn.getEndNode().getBounds());
         }
 
         g2d.dispose();
@@ -460,4 +456,5 @@ public class WorkspacePanel extends JPanel {
                 .map(c -> (RuleNode) c)
                 .toArray(RuleNode[]::new);
     }
+
 }

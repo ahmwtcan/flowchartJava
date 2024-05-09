@@ -24,6 +24,8 @@ public class DecisionNode extends RuleNode {
         // Set the font of the decision node
         setFont(new Font("Arial", Font.BOLD, 8));
 
+        setText("<html><center>" + text + "</center></html>");
+
     }
 
     @Override
@@ -40,8 +42,7 @@ public class DecisionNode extends RuleNode {
         g2d.setColor(getBackground());
         g2d.fillPolygon(diamond);
 
-        // Call super to draw the text field on top of the diamond shape
-        super.paintComponent(g2d);
+        super.paintComponent(g);
 
         // Draw the diamond shape's border
         g2d.setColor(getForeground());

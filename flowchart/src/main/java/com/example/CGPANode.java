@@ -75,7 +75,6 @@ public class CGPANode extends RuleNode {
         g.drawRect(0, 0, getWidth(), getHeight());
 
         // Call super to draw the text field on top of the CGPA node
-        super.paintComponent(g);
 
         String text = "<html><center>CGPA Threshold: " + cgpaThreshold + "<br>";
         setText(text);
