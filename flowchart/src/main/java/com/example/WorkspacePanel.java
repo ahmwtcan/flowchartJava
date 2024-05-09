@@ -66,12 +66,11 @@ public class WorkspacePanel extends JPanel {
                 draggingNode = null;
                 draggingStartPoint = null;
                 repaint();
-            } else if (SwingUtilities.isMiddleMouseButton(e)) {
+            } else if (SwingUtilities.isLeftMouseButton(e)) {
                 lastMouseDrag = transformPointToModel(e.getPoint());
                 dragStart.setLocation(lastMouseDrag);
                 repaint();
                 setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
-
             }
 
         }
@@ -79,29 +78,35 @@ public class WorkspacePanel extends JPanel {
         @Override
         public void mouseDragged(MouseEvent e) {
             Point2D ptModel = transformPointToModel(e.getPoint());
-            System.out.println("Dragged - Screen: " + e.getPoint() + ", Model: " +
-                    ptModel);
+            System.out.println("Dragged - Screen: " + e.getPoint() + ", Model: " + ptModel);
 
-            if (SwingUtilities.isMiddleMouseButton(e)) {
-                // change the view origin
+            if (draggingNode == null && lastMouseDrag != null) {
+                // Get the current mouse position in the transformed model space
                 Point2D current = transformPointToModel(e.getPoint());
+
+                // Calculate the change in x and y from the last drag point
                 double dx = current.getX() - lastMouseDrag.getX();
                 double dy = current.getY() - lastMouseDrag.getY();
-                viewOrigin.setLocation(viewOrigin.getX() - dx, viewOrigin.getY() - dy);
 
-                // update component positions
+                // Update the view origin by adding the delta (dx, dy)
+                viewOrigin.translate((int) dx, (int) dy);
+
+                // Update positions of all components to follow the drag
                 for (Component comp : getComponents()) {
                     if (comp instanceof RuleNode) {
                         RuleNode node = (RuleNode) comp;
                         Point loc = node.getLocation();
-                        node.setLocation((int) (loc.x - dx), (int) (loc.y - dy));
+                        // Add the deltas to the current node positions to move them with the drag
+                        node.setLocation((int) (loc.x + dx), (int) (loc.y + dy));
                     }
                 }
 
+                // Update the last drag point
                 lastMouseDrag = current;
+
+                // Revalidate and repaint the panel to reflect changes
                 revalidate();
                 repaint();
-
             }
         }
 
