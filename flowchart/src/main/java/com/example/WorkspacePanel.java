@@ -153,14 +153,37 @@ public class WorkspacePanel extends JPanel {
         draggingStartPoint = SwingUtilities.convertPoint(node, start, this);
     }
 
+    public void updateNodePositionsAndSizes(double scaleDelta) {
+
+        for (Component comp : getComponents()) {
+            if (comp instanceof RuleNode) {
+                RuleNode node = (RuleNode) comp;
+                Point loc = node.getLocation();
+                // Scale the node's location
+                loc.x *= scaleDelta;
+                loc.y *= scaleDelta;
+                node.setLocation(loc);
+
+                // Scale the node's size
+                Dimension size = node.getSize();
+                size.width *= scaleDelta;
+                size.height *= scaleDelta;
+                node.setSize(size);
+            }
+        }
+
+    }
+
     private void drawBackgroundGrid(Graphics2D g2) {
         int dotInterval = 20;
         g2.setColor(Color.LIGHT_GRAY);
         int offsetX = viewOrigin.x % dotInterval;
         int offsetY = viewOrigin.y % dotInterval;
-        for (int x = -offsetX; x < getWidth(); x += dotInterval) {
-            for (int y = -offsetY; y < getHeight(); y += dotInterval) {
-                g2.fillOval(x - 1, y - 1, 2, 2);
+
+        // draw dots
+        for (int x = offsetX; x < getWidth(); x += dotInterval) {
+            for (int y = offsetY; y < getHeight(); y += dotInterval) {
+                g2.fillOval(x - 1, y - 1, 3, 3);
             }
         }
     }
@@ -303,15 +326,14 @@ public class WorkspacePanel extends JPanel {
         g2d.transform(viewTransform); // Apply the view transform
 
         drawBackgroundGrid(g2d);
-        for (Component comp : getComponents()) {
-            if (comp instanceof RuleNode) {
-                RuleNode node = (RuleNode) comp;
-                Graphics2D gNode = (Graphics2D) g2d.create();
-                gNode.translate(node.getX(), node.getY());
-                node.paint(gNode);
-                gNode.dispose();
-            }
-        }
+        // for (Component comp : getComponents()) {
+        // if (comp instanceof RuleNode) {
+        // RuleNode node = (RuleNode) comp;
+        // Graphics2D gNode = (Graphics2D) g2d.create();
+        // gNode.translate(node.getX(), node.getY());
+        // gNode.dispose();
+        // }
+        // }
         for (Connection conn : connections) {
             RuleNode startNode = conn.getStartNode();
             RuleNode endNode = conn.getEndNode();

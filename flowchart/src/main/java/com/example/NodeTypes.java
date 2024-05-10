@@ -5,6 +5,7 @@ public enum NodeTypes {
     DECISION,
     RULE,
     RESULT,
-    CGPA
+    CGPA,
+    MAXIMUM_STUDY_DURATION
 
 }

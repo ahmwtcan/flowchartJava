@@ -7,8 +7,8 @@ import javax.swing.JOptionPane;
 public class ResultNode extends RuleNode {
     private ExamRight examRight = ExamRight.EK_SINAV;
 
-    public ResultNode(String text, NodeTypes type, int id) {
-        super(text, type, id);
+    public ResultNode(String text, NodeTypes type, int id, WorkspacePanel panel) {
+        super(text, type, id, panel);
         setPreferredSize(new Dimension(160, 80)); // Typical size for a rectangle
 
         // set background color according to exam right
@@ -28,7 +28,7 @@ public class ResultNode extends RuleNode {
     public void handleDoubleClick() {
         // Show the input dialog and capture the user's selection
         Object result = JOptionPane.showInputDialog(
-                null,
+                this.panel,
                 "Choose exam right",
                 "Exam Right",
                 JOptionPane.QUESTION_MESSAGE,
@@ -97,6 +97,7 @@ public class ResultNode extends RuleNode {
         BELIRLI_DONEM_SINAV_HAKKI,
         DERSE_DEVAM,
         HAK_YOK,
-        ILISIGI_KESILDI
+        ILISIGI_KESILDI,
+        MEZUN
     }
 }

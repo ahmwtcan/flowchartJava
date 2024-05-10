@@ -7,13 +7,17 @@ import javax.swing.BorderFactory;
 
 public class DecisionNode extends RuleNode {
 
-    public DecisionNode(String text, NodeTypes type, int id) {
-        super(text, type, id);
+    public DecisionNode(String text, NodeTypes type, int id, WorkspacePanel panel) {
+        super(text, type, id, panel);
 
         // Set the preferred size of the decision node
         setPreferredSize(new Dimension(160, 160));
 
         setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        setOpaque(true);
+        setBackground(Color.WHITE);
+        setForeground(Color.BLACK);
+        setFont(new Font("Arial", Font.PLAIN, 8));
 
     }
 
@@ -37,7 +41,9 @@ public class DecisionNode extends RuleNode {
         g2d.setColor(getForeground());
         g2d.drawPolygon(diamond);
 
-        // Dispose the graphics object
-        g2d.dispose();
+        // Draw the border of the decision node
+        g2d.drawRect(0, 0, getWidth(), getHeight());
+        g2d.setColor(getForeground());
+
     }
 }

@@ -7,8 +7,8 @@ import javax.swing.*;
 public class CGPANode extends RuleNode {
     private double cgpaThreshold;
 
-    public CGPANode(String text, NodeTypes type, int id) {
-        super(text, type, id);
+    public CGPANode(String text, NodeTypes type, int id, WorkspacePanel panel) {
+        super(text, type, id, panel);
 
         // Set the preferred size of the CGPA node
         setPreferredSize(new Dimension(160, 160));
@@ -41,7 +41,7 @@ public class CGPANode extends RuleNode {
         panel.add(cgpaField);
 
         // Show a dialog box with the panel
-        int result = JOptionPane.showConfirmDialog(null, panel, "Configure CGPA Threshold",
+        int result = JOptionPane.showConfirmDialog(this.panel, panel, "Configure CGPA Threshold",
                 JOptionPane.OK_CANCEL_OPTION,
                 JOptionPane.PLAIN_MESSAGE);
 
@@ -52,7 +52,7 @@ public class CGPANode extends RuleNode {
                 setText(String.valueOf(cgpaThreshold));
 
             } catch (NumberFormatException nfe) {
-                JOptionPane.showMessageDialog(null, "Please enter a valid number.");
+                JOptionPane.showMessageDialog(this.panel, "Please enter a valid number.");
             }
         }
 

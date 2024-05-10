@@ -7,11 +7,10 @@ public class ConditionNode extends RuleNode {
     private ThresholdType ffThresholdType = ThresholdType.FF_COUNT;
     private int ffLowerLimit = 0;
     private int ffUpperLimit = 1;
-
     private boolean tableCourseFlag = false; // Flag for Table Course
 
-    public ConditionNode(String text, NodeTypes type, int id) {
-        super(text, type, id);
+    public ConditionNode(String text, NodeTypes type, int id, WorkspacePanel panel) {
+        super(text, type, id, panel);
         setPreferredSize(new Dimension(250, 150));
         setBackground(new Color(173, 216, 230));
         setForeground(Color.BLACK);
@@ -40,7 +39,8 @@ public class ConditionNode extends RuleNode {
         panel.add(ffUpperField);
         panel.add(tableCourseCheckBox);
 
-        int result = JOptionPane.showConfirmDialog(null, panel, "Configure Thresholds", JOptionPane.OK_CANCEL_OPTION,
+        int result = JOptionPane.showConfirmDialog(this.panel, panel, "Configure Thresholds",
+                JOptionPane.OK_CANCEL_OPTION,
                 JOptionPane.PLAIN_MESSAGE);
         if (result == JOptionPane.OK_OPTION) {
             ffThresholdType = (ThresholdType) ffTypeBox.getSelectedItem();
@@ -50,6 +50,14 @@ public class ConditionNode extends RuleNode {
 
             repaint(); // Repaint to update text after changes
         }
+    }
+
+    @Override
+    public String getText() {
+
+        return ffThresholdType + " (" + ffLowerLimit + " <= " + ffUpperLimit + ")"
+                + (tableCourseFlag ? " T.Course: Enabled" : " T.Course: Disabled");
+
     }
 
     @Override
@@ -69,7 +77,7 @@ public class ConditionNode extends RuleNode {
 
         // Draw the text
         String typeText = ffThresholdType.toString();
-        String rangeText = String.format("(%d < %d)", ffLowerLimit, ffUpperLimit);
+        String rangeText = String.format("(%d =< %d)", ffLowerLimit, ffUpperLimit);
         String tableCourseText = "T.Course: " + (tableCourseFlag ? "Enabled" : "Disabled");
 
         // Calculate y position based on font metrics

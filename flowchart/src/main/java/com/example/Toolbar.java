@@ -11,42 +11,50 @@ public class Toolbar extends JToolBar {
     private JButton conditionButton = new JButton("Add Condition");
     private JButton saveButton = new JButton("Save");
     private JButton cgPaButton = new JButton("Add CGPA");
+    private JButton maximumButton = new JButton("Add Maximum Study Duration");
     private int id = 0;
 
     public Toolbar(WorkspacePanel workspacePanel) {
         addRuleButton.addActionListener(e -> {
-            RuleNode newNode = new RuleNode("New Rule", NodeTypes.RULE, id++);
+            RuleNode newNode = new RuleNode("New Rule", NodeTypes.RULE, id++, workspacePanel);
             newNode.setLocation(10, 10);
             workspacePanel.addRuleNode(newNode);
         });
 
         desicionButton.addActionListener(e -> {
-            RuleNode newNode = new DecisionNode("Decision", NodeTypes.DECISION, id++);
+            RuleNode newNode = new DecisionNode("Decision", NodeTypes.DECISION, id++, workspacePanel);
             newNode.setLocation(100, 100);
             workspacePanel.addRuleNode(newNode);
         });
 
         resultButton.addActionListener(e -> {
-            RuleNode newNode = new ResultNode("Result", NodeTypes.RESULT, id++);
+            RuleNode newNode = new ResultNode("Result", NodeTypes.RESULT, id++, workspacePanel);
             newNode.setLocation(200, 200);
             workspacePanel.addRuleNode(newNode);
         });
 
         startButton.addActionListener(e -> {
-            RuleNode newNode = new StartNode("Start", NodeTypes.START, id++);
+            RuleNode newNode = new StartNode("Start", NodeTypes.START, id++, workspacePanel);
             newNode.setLocation(300, 300);
             workspacePanel.addRuleNode(newNode);
         });
 
         conditionButton.addActionListener(e -> {
-            RuleNode newNode = new ConditionNode("Condition", NodeTypes.RULE, id++);
+            RuleNode newNode = new ConditionNode("Condition", NodeTypes.RULE, id++, workspacePanel);
             newNode.setLocation(400, 400);
             workspacePanel.addRuleNode(newNode);
         });
 
         cgPaButton.addActionListener(e -> {
-            RuleNode newNode = new CGPANode("CGPA", NodeTypes.CGPA, id++);
+            RuleNode newNode = new CGPANode("CGPA", NodeTypes.CGPA, id++, workspacePanel);
             newNode.setLocation(500, 500);
+            workspacePanel.addRuleNode(newNode);
+        });
+
+        maximumButton.addActionListener(e -> {
+            RuleNode newNode = new MaximumStudyDurationNode("Maximum Study Duration", NodeTypes.MAXIMUM_STUDY_DURATION,
+                    id++, workspacePanel);
+            newNode.setLocation(600, 600);
             workspacePanel.addRuleNode(newNode);
         });
 
@@ -61,6 +69,7 @@ public class Toolbar extends JToolBar {
         this.add(addRuleButton);
         this.add(resultButton);
         this.add(cgPaButton);
+        this.add(maximumButton);
 
     }
 }

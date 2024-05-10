@@ -21,11 +21,13 @@ public class RuleNode extends JLabel {
     private boolean resizing;
     private final AffineTransform viewTransform = new AffineTransform();
     private int id;
+    protected WorkspacePanel panel; // Reference to the parent panel
 
-    public RuleNode(String text, NodeTypes type, int id) {
+    public RuleNode(String text, NodeTypes type, int id, WorkspacePanel panel) {
         super(text);
         nodeName = text;
         this.id = id;
+        this.panel = panel;
         initializeUI();
     }
 
@@ -52,7 +54,7 @@ public class RuleNode extends JLabel {
         MouseAdapter mouseAdapter = new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                Point2D transformedPoint = transformPointToModel(e.getPoint());
+                Point2D transformedPoint = panel.transformPointToModel(e.getPoint());
                 initialClick = new Point((int) transformedPoint.getX(), (int) transformedPoint.getY());
                 System.out.println("RuleNode: initialClick = " + initialClick);
                 if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount() == 2) {
@@ -72,7 +74,6 @@ public class RuleNode extends JLabel {
                     JMenuItem deleteItem = new JMenuItem("Delete");
                     JMenuItem configurationItem = new JMenuItem("Configuration");
                     deleteItem.addActionListener(e1 -> {
-                        WorkspacePanel panel = (WorkspacePanel) getParent();
                         panel.removeRuleNode(RuleNode.this);
                     });
                     configurationItem.addActionListener(e1 -> configuration());
@@ -106,7 +107,6 @@ public class RuleNode extends JLabel {
             }
 
             private void startDragging(MouseEvent e) {
-                WorkspacePanel panel = (WorkspacePanel) getParent();
                 if (isNearEdge(initialClick)) {
                     setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
                     panel.startDraggingForConnection(RuleNode.this, e.getPoint());
@@ -117,7 +117,6 @@ public class RuleNode extends JLabel {
             }
 
             private void dragNode(MouseEvent e) {
-                WorkspacePanel panel = (WorkspacePanel) getParent();
                 if (isNearEdge(initialClick)) {
                     setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
                     panel.dragConnection(SwingUtilities.convertPoint(RuleNode.this, e.getPoint(), panel));
@@ -128,7 +127,6 @@ public class RuleNode extends JLabel {
             }
 
             private void finishDragging(MouseEvent e) {
-                WorkspacePanel panel = (WorkspacePanel) getParent();
                 if (isNearEdge(initialClick)) {
                     panel.completeConnection(SwingUtilities.convertPoint(RuleNode.this, e.getPoint(), panel));
                 }
@@ -165,7 +163,7 @@ public class RuleNode extends JLabel {
     }
 
     public void handleDoubleClick() {
-        String newName = JOptionPane.showInputDialog("Enter new name for the node:", nodeName);
+        String newName = JOptionPane.showInputDialog(this.panel, "Enter new name for the node:", nodeName);
         if (newName != null && !newName.trim().isEmpty()) {
             nodeName = newName; // Update the plain text name
             updateText(); // Update the display text

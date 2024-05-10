@@ -1,0 +1,453 @@
+[
+    {
+        "startNode": {
+            "id": "0",
+            "text": "Start"
+        },
+        "endNode": {
+            "id": "1",
+            "text": "Azami süremi doldurdum"
+        },
+        "type": true
+    },
+    {
+        "startNode": {
+            "id": "1",
+            "text": "Azami süremi doldurdum"
+        },
+        "endNode": {
+            "id": "2",
+            "text": "Condition"
+        },
+        "type": false
+    },
+    {
+        "startNode": {
+            "id": "2",
+            "text": "Condition"
+        },
+        "endNode": {
+            "id": "3",
+            "text": "HAK_YOK"
+        },
+        "type": true
+    },
+    {
+        "startNode": {
+            "id": "2",
+            "text": "Condition"
+        },
+        "endNode": {
+            "id": "4",
+            "text": "Staj tamamladım XX400 aldım \"P\" notu ile geçtim"
+        },
+        "type": true
+    },
+    {
+        "startNode": {
+            "id": "4",
+            "text": "Staj tamamladım XX400 aldım \"P\" notu ile geçtim"
+        },
+        "endNode": {
+            "id": "3",
+            "text": "HAK_YOK"
+        },
+        "type": false
+    },
+    {
+        "startNode": {
+            "id": "4",
+            "text": "Staj tamamladım XX400 aldım \"P\" notu ile geçtim"
+        },
+        "endNode": {
+            "id": "5",
+            "text": "Programımdaki bütün derleri bir kere aldım ve hepsinin notu not çizelgemde gözüküyor"
+        },
+        "type": true
+    },
+    {
+        "startNode": {
+            "id": "5",
+            "text": "Programımdaki bütün derleri bir kere aldım ve hepsinin notu not çizelgemde gözüküyor"
+        },
+        "endNode": {
+            "id": "8",
+            "text": "Normal öğretim süresini doldurdum."
+        },
+        "type": true
+    },
+    {
+        "startNode": {
+            "id": "8",
+            "text": "Normal öğretim süresini doldurdum."
+        },
+        "endNode": {
+            "id": "9",
+            "text": "Condition"
+        },
+        "type": true
+    },
+    {
+        "startNode": {
+            "id": "9",
+            "text": "Condition"
+        },
+        "endNode": {
+            "id": "10",
+            "text": "Condition"
+        },
+        "type": false
+    },
+    {
+        "startNode": {
+            "id": "10",
+            "text": "Condition"
+        },
+        "endNode": {
+            "id": "11",
+            "text": "CGPA Threshold: 2.0"
+        },
+        "type": true
+    },
+    {
+        "startNode": {
+            "id": "11",
+            "text": "CGPA Threshold: 2.0"
+        },
+        "endNode": {
+            "id": "7",
+            "text": "Bir dersten not yükseltirsem ortalamam 2.00+ olacak"
+        },
+        "type": true
+    },
+    {
+        "startNode": {
+            "id": "7",
+            "text": "Bir dersten not yükseltirsem ortalamam 2.00+ olacak"
+        },
+        "endNode": {
+            "id": "13",
+            "text": "EK_SINAV"
+        },
+        "type": true
+    },
+    {
+        "startNode": {
+            "id": "7",
+            "text": "Bir dersten not yükseltirsem ortalamam 2.00+ olacak"
+        },
+        "endNode": {
+            "id": "12",
+            "text": "HAK_YOK"
+        },
+        "type": false
+    },
+    {
+        "startNode": {
+            "id": "11",
+            "text": "CGPA Threshold: 2.0"
+        },
+        "endNode": {
+            "id": "14",
+            "text": "HAK_YOK"
+        },
+        "type": false
+    },
+    {
+        "startNode": {
+            "id": "10",
+            "text": "Condition"
+        },
+        "endNode": {
+            "id": "15",
+            "text": "HAK_YOK"
+        },
+        "type": false
+    },
+    {
+        "startNode": {
+            "id": "9",
+            "text": "Condition"
+        },
+        "endNode": {
+            "id": "16",
+            "text": "EK_SINAV"
+        },
+        "type": true
+    },
+    {
+        "startNode": {
+            "id": "8",
+            "text": "Normal öğretim süresini doldurdum."
+        },
+        "endNode": {
+            "id": "18",
+            "text": "HAK_YOK"
+        },
+        "type": false
+    },
+    {
+        "startNode": {
+            "id": "5",
+            "text": "Programımdaki bütün derleri bir kere aldım ve hepsinin notu not çizelgemde gözüküyor"
+        },
+        "endNode": {
+            "id": "19",
+            "text": "HAK_YOK"
+        },
+        "type": false
+    },
+    {
+        "startNode": {
+            "id": "1",
+            "text": "Azami süremi doldurdum"
+        },
+        "endNode": {
+            "id": "20",
+            "text": "Condition"
+        },
+        "type": true
+    },
+    {
+        "startNode": {
+            "id": "20",
+            "text": "Condition"
+        },
+        "endNode": {
+            "id": "21",
+            "text": "HAK_YOK"
+        },
+        "type": true
+    },
+    {
+        "startNode": {
+            "id": "20",
+            "text": "Condition"
+        },
+        "endNode": {
+            "id": "22",
+            "text": "Daha önce hakkımda ek sınav hakkı kararı alınmıştı"
+        },
+        "type": false
+    },
+    {
+        "startNode": {
+            "id": "22",
+            "text": "Daha önce hakkımda ek sınav hakkı kararı alınmıştı"
+        },
+        "endNode": {
+            "id": "23",
+            "text": "Ek sınav hakkımı tüm başarısız derler için kullandım "
+        },
+        "type": true
+    },
+    {
+        "startNode": {
+            "id": "23",
+            "text": "Ek sınav hakkımı tüm başarısız derler için kullandım "
+        },
+        "endNode": {
+            "id": "24",
+            "text": "HAK_YOK"
+        },
+        "type": false
+    },
+    {
+        "startNode": {
+            "id": "23",
+            "text": "Ek sınav hakkımı tüm başarısız derler için kullandım "
+        },
+        "endNode": {
+            "id": "25",
+            "text": "Condition"
+        },
+        "type": true
+    },
+    {
+        "startNode": {
+            "id": "25",
+            "text": "Condition"
+        },
+        "endNode": {
+            "id": "26",
+            "text": "EK_SINAV"
+        },
+        "type": false
+    },
+    {
+        "startNode": {
+            "id": "22",
+            "text": "Daha önce hakkımda ek sınav hakkı kararı alınmıştı"
+        },
+        "endNode": {
+            "id": "27",
+            "text": "Condition"
+        },
+        "type": false
+    },
+    {
+        "startNode": {
+            "id": "27",
+            "text": "Condition"
+        },
+        "endNode": {
+            "id": "28",
+            "text": "Condition"
+        },
+        "type": true
+    },
+    {
+        "startNode": {
+            "id": "27",
+            "text": "Condition"
+        },
+        "endNode": {
+            "id": "29",
+            "text": "Condition"
+        },
+        "type": false
+    },
+    {
+        "startNode": {
+            "id": "28",
+            "text": "Condition"
+        },
+        "endNode": {
+            "id": "30",
+            "text": "ILISIGI_KESILDI"
+        },
+        "type": true
+    },
+    {
+        "startNode": {
+            "id": "28",
+            "text": "Condition"
+        },
+        "endNode": {
+            "id": "31",
+            "text": "EK_SINAV"
+        },
+        "type": false
+    },
+    {
+        "startNode": {
+            "id": "29",
+            "text": "Condition"
+        },
+        "endNode": {
+            "id": "32",
+            "text": "DERSE_DEVAM"
+        },
+        "type": false
+    },
+    {
+        "startNode": {
+            "id": "29",
+            "text": "Condition"
+        },
+        "endNode": {
+            "id": "33",
+            "text": "Condition"
+        },
+        "type": true
+    },
+    {
+        "startNode": {
+            "id": "33",
+            "text": "Condition"
+        },
+        "endNode": {
+            "id": "34",
+            "text": "EK_SINAV"
+        },
+        "type": false
+    },
+    {
+        "startNode": {
+            "id": "33",
+            "text": "Condition"
+        },
+        "endNode": {
+            "id": "35",
+            "text": "Condition"
+        },
+        "type": true
+    },
+    {
+        "startNode": {
+            "id": "35",
+            "text": "Condition"
+        },
+        "endNode": {
+            "id": "36",
+            "text": "Condition"
+        },
+        "type": false
+    },
+    {
+        "startNode": {
+            "id": "35",
+            "text": "Condition"
+        },
+        "endNode": {
+            "id": "37",
+            "text": "SINIRSIZ_SINAV"
+        },
+        "type": true
+    },
+    {
+        "startNode": {
+            "id": "36",
+            "text": "Condition"
+        },
+        "endNode": {
+            "id": "38",
+            "text": "EK_SINAV"
+        },
+        "type": false
+    },
+    {
+        "startNode": {
+            "id": "36",
+            "text": "Condition"
+        },
+        "endNode": {
+            "id": "39",
+            "text": "CGPA Threshold: 2.0"
+        },
+        "type": true
+    },
+    {
+        "startNode": {
+            "id": "39",
+            "text": "CGPA Threshold: 2.0"
+        },
+        "endNode": {
+            "id": "40",
+            "text": "HAK_YOK"
+        },
+        "type": true
+    },
+    {
+        "startNode": {
+            "id": "39",
+            "text": "CGPA Threshold: 2.0"
+        },
+        "endNode": {
+            "id": "41",
+            "text": "SINIRSIZ_SINAV"
+        },
+        "type": false
+    },
+    {
+        "startNode": {
+            "id": "25",
+            "text": "Condition"
+        },
+        "endNode": {
+            "id": "42",
+            "text": "ILISIGI_KESILDI"
+        },
+        "type": true
+    }
+]
