@@ -1,0 +1,35 @@
+[
+    {
+        "startNode": {
+            "id": "0",
+            "text": "Start"
+        },
+        "endNode": {
+            "id": "1",
+            "text": "CGPA Threshold: 2.5"
+        },
+        "type": true
+    },
+    {
+        "startNode": {
+            "id": "1",
+            "text": "CGPA Threshold: 2.5"
+        },
+        "endNode": {
+            "id": "4",
+            "text": "EK_SINAV"
+        },
+        "type": true
+    },
+    {
+        "startNode": {
+            "id": "1",
+            "text": "CGPA Threshold: 2.5"
+        },
+        "endNode": {
+            "id": "3",
+            "text": "HAK_YOK"
+        },
+        "type": false
+    }
+]

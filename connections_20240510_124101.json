@@ -1,0 +1,57 @@
+[
+    {
+        "startNode": {
+            "id": "0",
+            "text": "Start"
+        },
+        "endNode": {
+            "id": "6",
+            "text": "Study Duration Threshold: 14"
+        },
+        "type": true
+    },
+    {
+        "startNode": {
+            "id": "6",
+            "text": "Study Duration Threshold: 14"
+        },
+        "endNode": {
+            "id": "1",
+            "text": "Decision"
+        },
+        "type": true
+    },
+    {
+        "startNode": {
+            "id": "6",
+            "text": "Study Duration Threshold: 14"
+        },
+        "endNode": {
+            "id": "5",
+            "text": "CGPA Threshold: 2.0"
+        },
+        "type": false
+    },
+    {
+        "startNode": {
+            "id": "1",
+            "text": "Decision"
+        },
+        "endNode": {
+            "id": "2",
+            "text": "FF_COUNT (0 <= 1) T.Course: Disabled"
+        },
+        "type": true
+    },
+    {
+        "startNode": {
+            "id": "1",
+            "text": "Decision"
+        },
+        "endNode": {
+            "id": "4",
+            "text": "EK_SINAV"
+        },
+        "type": false
+    }
+]

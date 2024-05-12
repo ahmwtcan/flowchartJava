@@ -1,0 +1,24 @@
+[
+    {
+        "startNode": {
+            "id": "1",
+            "text": "Start"
+        },
+        "endNode": {
+            "id": "2",
+            "text": "<html><center>Ben burada ne ua-ptıysa moasda ansdklasd alsdknasd asd asd asda</center></html>"
+        },
+        "type": true
+    },
+    {
+        "startNode": {
+            "id": "1",
+            "text": "Start"
+        },
+        "endNode": {
+            "id": "0",
+            "text": "FF_COUNT (0 <= 1) T.Course: Disabled"
+        },
+        "type": false
+    }
+]

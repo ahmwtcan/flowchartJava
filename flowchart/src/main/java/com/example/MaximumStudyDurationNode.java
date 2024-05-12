@@ -13,16 +13,20 @@ public class MaximumStudyDurationNode extends RuleNode {
 
     public MaximumStudyDurationNode(String text, NodeTypes type, int id, WorkspacePanel panel) {
         super(text, type, id, panel);
-        setPreferredSize(new Dimension(160, 100)); // Adjust size as needed
         setBackground(Color.lightGray); // Set a different background color
         semesterCount = 0; // Default value
         setFont(new Font("Arial", Font.BOLD, 12));
-
+        setPreferredSize(getPreferredSize());
     }
 
     @Override
     public void handleDoubleClick() {
         configuration();
+    }
+
+    @Override
+    public Dimension getPreferredSize() {
+        return new Dimension(150, 65); // Change dimensions as needed
     }
 
     @Override
@@ -56,12 +60,13 @@ public class MaximumStudyDurationNode extends RuleNode {
 
     @Override
     public String getText() {
-        return "Study Duration Threshold: " + semesterCount;
+        return "Study Duration >= " + semesterCount;
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
+        setPreferredSize(new Dimension(200, 80)); // Adjust size as needed
 
         // Clear the background
         g.setColor(getBackground());
@@ -73,13 +78,11 @@ public class MaximumStudyDurationNode extends RuleNode {
 
         // Draw the text
 
-        String text1 = "Study Duration";
-        String text2 = "Threshold: " + semesterCount;
+        String text1 = "Study Duration " + ">= " + semesterCount;
 
         g.setColor(Color.BLACK);
-        g.setFont(new Font("Arial", Font.BOLD, 12));
+        g.setFont(new Font("Arial", Font.BOLD, 10));
         g.drawString(text1, 10, 20);
-        g.drawString(text2, 10, 40);
 
     }
 

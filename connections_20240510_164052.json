@@ -1,0 +1,101 @@
+[
+    {
+        "startNode": {
+            "id": "4",
+            "text": "Start"
+        },
+        "endNode": {
+            "id": "6",
+            "text": "i pass XX400 course"
+        },
+        "type": true
+    },
+    {
+        "startNode": {
+            "id": "6",
+            "text": "i pass XX400 course"
+        },
+        "endNode": {
+            "id": "2",
+            "text": "HAK_YOK"
+        },
+        "type": false
+    },
+    {
+        "startNode": {
+            "id": "6",
+            "text": "i pass XX400 course"
+        },
+        "endNode": {
+            "id": "5",
+            "text": "WrL_COUNT (6 <= 10) T.Course: Disabled"
+        },
+        "type": true
+    },
+    {
+        "startNode": {
+            "id": "5",
+            "text": "WrL_COUNT (6 <= 10) T.Course: Disabled"
+        },
+        "endNode": {
+            "id": "1",
+            "text": "CGPA >= 3.0"
+        },
+        "type": true
+    },
+    {
+        "startNode": {
+            "id": "1",
+            "text": "CGPA >= 3.0"
+        },
+        "endNode": {
+            "id": "7",
+            "text": "ILISIGI_KESILDI"
+        },
+        "type": false
+    },
+    {
+        "startNode": {
+            "id": "1",
+            "text": "CGPA >= 3.0"
+        },
+        "endNode": {
+            "id": "0",
+            "text": "Study Duration >= 14"
+        },
+        "type": true
+    },
+    {
+        "startNode": {
+            "id": "5",
+            "text": "WrL_COUNT (6 <= 10) T.Course: Disabled"
+        },
+        "endNode": {
+            "id": "8",
+            "text": "FF_COUNT (1 <= 6) T.Course: Enabled"
+        },
+        "type": false
+    },
+    {
+        "startNode": {
+            "id": "0",
+            "text": "Study Duration >= 14"
+        },
+        "endNode": {
+            "id": "9",
+            "text": "ILISIGI_KESILDI"
+        },
+        "type": true
+    },
+    {
+        "startNode": {
+            "id": "0",
+            "text": "Study Duration >= 14"
+        },
+        "endNode": {
+            "id": "10",
+            "text": "EK_SINAV"
+        },
+        "type": false
+    }
+]

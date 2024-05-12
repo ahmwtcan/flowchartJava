@@ -11,10 +11,15 @@ public class ConditionNode extends RuleNode {
 
     public ConditionNode(String text, NodeTypes type, int id, WorkspacePanel panel) {
         super(text, type, id, panel);
-        setPreferredSize(new Dimension(250, 150));
         setBackground(new Color(173, 216, 230));
         setForeground(Color.BLACK);
         setFont(new Font("Arial", Font.BOLD, 12));
+        setPreferredSize(getPreferredSize());
+    }
+
+    @Override
+    public Dimension getPreferredSize() {
+        return new Dimension(130, 65); // Change dimensions as needed
     }
 
     @Override
@@ -77,7 +82,7 @@ public class ConditionNode extends RuleNode {
 
         // Draw the text
         String typeText = ffThresholdType.toString();
-        String rangeText = String.format("(%d =< %d)", ffLowerLimit, ffUpperLimit);
+        String rangeText = String.format("(%d <= %d)", ffLowerLimit, ffUpperLimit);
         String tableCourseText = "T.Course: " + (tableCourseFlag ? "Enabled" : "Disabled");
 
         // Calculate y position based on font metrics

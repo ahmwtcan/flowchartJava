@@ -1,0 +1,46 @@
+[
+    {
+        "startNode": {
+            "id": "2",
+            "text": "asdasd asdasd asdas asd asd adsdasd asd"
+        },
+        "endNode": {
+            "id": "4",
+            "text": "EK_SINAV"
+        },
+        "type": true
+    },
+    {
+        "startNode": {
+            "id": "1",
+            "text": "Start"
+        },
+        "endNode": {
+            "id": "4",
+            "text": "EK_SINAV"
+        },
+        "type": false
+    },
+    {
+        "startNode": {
+            "id": "2",
+            "text": "asdasd asdasd asdas asd asd adsdasd asd"
+        },
+        "endNode": {
+            "id": "3",
+            "text": "New Rule"
+        },
+        "type": false
+    },
+    {
+        "startNode": {
+            "id": "2",
+            "text": "asdasd asdasd asdas asd asd adsdasd asd"
+        },
+        "endNode": {
+            "id": "0",
+            "text": "FF_COUNT (0 <= 1) T.Course: Disabled"
+        },
+        "type": false
+    }
+]

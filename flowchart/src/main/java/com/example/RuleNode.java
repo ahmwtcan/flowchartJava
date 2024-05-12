@@ -17,11 +17,12 @@ import java.awt.geom.Point2D;
 public class RuleNode extends JLabel {
     private static final int EDGE_THRESHOLD = 10; // Edge threshold for connections
     public Point initialClick; // Store initial click location for dragging calculations
-    private String nodeName; // Store the actual node name without HTML tags
+    protected String nodeName; // Store the actual node name without HTML tags
     private boolean resizing;
     private final AffineTransform viewTransform = new AffineTransform();
     private int id;
     protected WorkspacePanel panel; // Reference to the parent panel
+    private String formattedText; // HTML formatted text for display
 
     public RuleNode(String text, NodeTypes type, int id, WorkspacePanel panel) {
         super(text);
@@ -38,7 +39,7 @@ public class RuleNode extends JLabel {
         setBorder(BorderFactory.createLineBorder(Color.BLACK));
         setOpaque(true);
         setBackground(Color.WHITE);
-        setPreferredSize(new Dimension(66, 60)); // Make nodes larger
+        setPreferredSize(new Dimension(70, 65)); // Make nodes larger
         setSize(getPreferredSize());
         setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
         addMouseEvents();
@@ -203,8 +204,12 @@ public class RuleNode extends JLabel {
         g.fillRect(getWidth() - EDGE_THRESHOLD, getHeight() - EDGE_THRESHOLD, EDGE_THRESHOLD, EDGE_THRESHOLD);
     }
 
-    public void updateText() {
-        setText("<html><center>" + nodeName + "</center></html>"); // Format text with HTML for display
+    protected void updateText() {
+        // Assuming 10 pixels padding total (5 pixels on each side)
+        this.formattedText = String.format(
+                "<html><div style='text-align:center;width:%dpx;'>%s</div></html>",
+                getWidth() - 10, nodeName);
+        super.setText(formattedText);
     }
 
     public Point getConnectionPoint() {

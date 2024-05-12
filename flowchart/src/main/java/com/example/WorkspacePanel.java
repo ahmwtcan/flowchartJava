@@ -77,8 +77,6 @@ public class WorkspacePanel extends JPanel {
 
         @Override
         public void mouseDragged(MouseEvent e) {
-            Point2D ptModel = transformPointToModel(e.getPoint());
-            System.out.println("Dragged - Screen: " + e.getPoint() + ", Model: " + ptModel);
 
             if (draggingNode == null && lastMouseDrag != null) {
                 // Get the current mouse position in the transformed model space
@@ -503,19 +501,15 @@ public class WorkspacePanel extends JPanel {
 
         // save nodes and connections to file export as json
         try {
-            RuleNode[] nodes = getNodes();
             List<Connection> connections = this.connections;
 
-            String nodesJson = mapper.writeValueAsString(nodes);
             String connectionsJson = mapper.writeValueAsString(connections);
             LocalDateTime now = LocalDateTime.now();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss");
             String timestamp = now.format(formatter);
 
             // Construct file paths with the timestamp
-            String nodesFilename = "nodes_" + timestamp + ".json";
             String connectionsFilename = "connections_" + timestamp + ".json";
-            Files.write(Paths.get(nodesFilename), nodesJson.getBytes());
             Files.write(Paths.get(connectionsFilename), connectionsJson.getBytes());
 
         } catch (IOException e) {

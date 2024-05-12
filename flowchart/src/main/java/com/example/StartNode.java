@@ -28,6 +28,11 @@ public class StartNode extends RuleNode {
     }
 
     @Override
+    public void handleDoubleClick() {
+        // Do nothing when double-clicked
+    }
+
+    @Override
     protected void paintComponent(Graphics g) {
         // Fill the start node with the background color
         g.setColor(getBackground());

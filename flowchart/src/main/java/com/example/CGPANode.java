@@ -60,7 +60,7 @@ public class CGPANode extends RuleNode {
 
     @Override
     public String getText() {
-        return "CGPA Threshold: " + cgpaThreshold;
+        return "CGPA >= " + cgpaThreshold;
 
     }
 
@@ -77,7 +77,7 @@ public class CGPANode extends RuleNode {
         // Call super to draw the text field on top of the CGPA node
         super.paintComponent(g);
 
-        String text = "<html><center>CGPA Threshold: " + cgpaThreshold + "</center></html>";
+        String text = "<html><center>CGPA >= " + cgpaThreshold + "</center></html>";
 
         setText(text);
 
