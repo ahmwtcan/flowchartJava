@@ -4,7 +4,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseWheelEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
 import java.awt.geom.NoninvertibleTransformException;
@@ -29,9 +28,9 @@ public class WorkspacePanel extends JPanel {
     private Point draggingStartPoint;
     private final AffineTransform viewTransform = new AffineTransform();
     private Point viewOrigin = new Point(0, 0);
-    private double currentScale = 1.0; // Track current scale
-    private final double minScale = 0.1; // Minimum scale factor
-    private final double maxScale = 10.0; // Maximum scale factor
+    // private double currentScale = 1.0; // Track current scale
+    // private final double minScale = 0.1; // Minimum scale factor
+    // private final double maxScale = 10.0; // Maximum scale factor
 
     public WorkspacePanel() {
         setBackground(Color.WHITE);
