@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class ConditionNode extends RuleNode {
-    private ThresholdType ffThresholdType = ThresholdType.FF_COUNT;
+    private ThresholdType ffThresholdType = ThresholdType.FF_SAYISI;
     private int ffLowerLimit = 0;
     private int ffUpperLimit = 1;
     private boolean tableCourseFlag = false; // Flag for Table Course
@@ -33,18 +33,18 @@ public class ConditionNode extends RuleNode {
         ffTypeBox.setSelectedItem(ffThresholdType);
         JTextField ffLowerField = new JTextField(String.valueOf(ffLowerLimit), 5);
         JTextField ffUpperField = new JTextField(String.valueOf(ffUpperLimit), 5);
-        JCheckBox tableCourseCheckBox = new JCheckBox("Table Course Flag", tableCourseFlag);
+        JCheckBox tableCourseCheckBox = new JCheckBox("Sınavla Not verilmeyen ders", tableCourseFlag);
 
         JPanel panel = new JPanel(new GridLayout(0, 1));
-        panel.add(new JLabel("FF Threshold Type:"));
+        panel.add(new JLabel("FF Eşiği Type:"));
         panel.add(ffTypeBox);
-        panel.add(new JLabel("Lower Limit:"));
+        panel.add(new JLabel("Alt Limit:"));
         panel.add(ffLowerField);
-        panel.add(new JLabel("Upper Limit:"));
+        panel.add(new JLabel("Üst Limit:"));
         panel.add(ffUpperField);
         panel.add(tableCourseCheckBox);
 
-        int result = JOptionPane.showConfirmDialog(this.panel, panel, "Configure Thresholds",
+        int result = JOptionPane.showConfirmDialog(this.panel, panel, "Ders Not Durumu Ayarla",
                 JOptionPane.OK_CANCEL_OPTION,
                 JOptionPane.PLAIN_MESSAGE);
         if (result == JOptionPane.OK_OPTION) {
@@ -61,7 +61,7 @@ public class ConditionNode extends RuleNode {
     public String getText() {
 
         return ffThresholdType + " (" + ffLowerLimit + " <= " + ffUpperLimit + ")"
-                + (tableCourseFlag ? " T.Course: Enabled" : " T.Course: Disabled");
+                + (tableCourseFlag ? "T.Dersi: Evet" : " T.Dersi: Hayır");
 
     }
 
@@ -83,7 +83,7 @@ public class ConditionNode extends RuleNode {
         // Draw the text
         String typeText = ffThresholdType.toString();
         String rangeText = String.format("(%d <= %d)", ffLowerLimit, ffUpperLimit);
-        String tableCourseText = "T.Course: " + (tableCourseFlag ? "Enabled" : "Disabled");
+        String tableCourseText = "T.Dersi: " + (tableCourseFlag ? "Evet" : "Hayır");
 
         // Calculate y position based on font metrics
         int typeY = 10 + g.getFontMetrics().getHeight();
@@ -96,6 +96,6 @@ public class ConditionNode extends RuleNode {
     }
 
     public enum ThresholdType {
-        FF_COUNT, WrL_COUNT, FAILED_COUNT
+        FF_SAYISI, WrL_SAYISI, BAŞARISIZ_SAYISI
     }
 }

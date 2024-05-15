@@ -1,0 +1,101 @@
+[
+    {
+        "startNode": {
+            "id": "0",
+            "text": "Start"
+        },
+        "endNode": {
+            "id": "1",
+            "text": "Zorunlu stajı tamamladım XX400 dersine kayıt oldum ve \"P\" notu ile geçtim."
+        },
+        "type": true
+    },
+    {
+        "startNode": {
+            "id": "1",
+            "text": "Zorunlu stajı tamamladım XX400 dersine kayıt oldum ve \"P\" notu ile geçtim."
+        },
+        "endNode": {
+            "id": "2",
+            "text": "FF_COUNT (0 <= 3) T.Course: Disabled"
+        },
+        "type": true
+    },
+    {
+        "startNode": {
+            "id": "1",
+            "text": "Zorunlu stajı tamamladım XX400 dersine kayıt oldum ve \"P\" notu ile geçtim."
+        },
+        "endNode": {
+            "id": "3",
+            "text": "CGPA >= 2.68"
+        },
+        "type": false
+    },
+    {
+        "startNode": {
+            "id": "3",
+            "text": "CGPA >= 2.68"
+        },
+        "endNode": {
+            "id": "5",
+            "text": "Eğer bir dersten  not yükseltirsem ortalamam 2.70+ olacak"
+        },
+        "type": false
+    },
+    {
+        "startNode": {
+            "id": "3",
+            "text": "CGPA >= 2.68"
+        },
+        "endNode": {
+            "id": "7",
+            "text": "MEZUN"
+        },
+        "type": true
+    },
+    {
+        "startNode": {
+            "id": "5",
+            "text": "Eğer bir dersten  not yükseltirsem ortalamam 2.70+ olacak"
+        },
+        "endNode": {
+            "id": "7",
+            "text": "MEZUN"
+        },
+        "type": true
+    },
+    {
+        "startNode": {
+            "id": "5",
+            "text": "Eğer bir dersten  not yükseltirsem ortalamam 2.70+ olacak"
+        },
+        "endNode": {
+            "id": "8",
+            "text": "ILISIGI_KESILDI"
+        },
+        "type": false
+    },
+    {
+        "startNode": {
+            "id": "2",
+            "text": "FF_COUNT (0 <= 3) T.Course: Disabled"
+        },
+        "endNode": {
+            "id": "9",
+            "text": "EK_SINAV"
+        },
+        "type": true
+    },
+    {
+        "startNode": {
+            "id": "2",
+            "text": "FF_COUNT (0 <= 3) T.Course: Disabled"
+        },
+        "endNode": {
+            "id": "10",
+            "text": "HAK_YOK"
+        },
+        "type": false
+    }
+]

@@ -1,0 +1,18 @@
+Uygulama başlangıç zamanı: 2024-05-15T15:12:31.096656500
+Uygulama bitiş zamanı: 2024-05-15T15:13:06.540830100
+-------------
+Oturum Numarası: 1
+Uygulama başlangıç zamanı: 2024-05-15T15:15:12.276438100
+Uygulama bitiş zamanı: 2024-05-15T15:15:33.636264100
+Geçen süre: 0 saat 0 dakika 21 saniye
+-------------
+Oturum Numarası: 1
+Uygulama başlangıç zamanı: 2024-05-15T15:21:50.043631200
+Uygulama bitiş zamanı: 2024-05-15T15:22:12.286293900
+Geçen süre: 0 saat 0 dakika 22 saniye
+-------------
+Oturum Numarası: 1
+Uygulama başlangıç zamanı: 2024-05-15T15:22:53.905526500
+Uygulama bitiş zamanı: 2024-05-15T15:23:11.464987200
+Geçen süre: 0 saat 0 dakika 17 saniye
+-------------

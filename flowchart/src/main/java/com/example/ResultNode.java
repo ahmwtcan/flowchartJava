@@ -94,6 +94,7 @@ public class ResultNode extends RuleNode {
     public enum ExamRight {
         EK_SINAV,
         SINIRSIZ_SINAV,
+        SINAV,
         BELIRLI_DONEM_SINAV_HAKKI,
         DERSE_DEVAM,
         HAK_YOK,

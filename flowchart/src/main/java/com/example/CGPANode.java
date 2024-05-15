@@ -37,11 +37,11 @@ public class CGPANode extends RuleNode {
 
         // Create a panel to hold the text field
         JPanel panel = new JPanel();
-        panel.add(new JLabel("CGPA Threshold:"));
+        panel.add(new JLabel("CGPA "));
         panel.add(cgpaField);
 
         // Show a dialog box with the panel
-        int result = JOptionPane.showConfirmDialog(this.panel, panel, "Configure CGPA Threshold",
+        int result = JOptionPane.showConfirmDialog(this.panel, panel, "Not Ortalaması Ayarla",
                 JOptionPane.OK_CANCEL_OPTION,
                 JOptionPane.PLAIN_MESSAGE);
 
@@ -52,7 +52,7 @@ public class CGPANode extends RuleNode {
                 setText(String.valueOf(cgpaThreshold));
 
             } catch (NumberFormatException nfe) {
-                JOptionPane.showMessageDialog(this.panel, "Please enter a valid number.");
+                JOptionPane.showMessageDialog(this.panel, " Geçersiz değer! Lütfen sayısal bir değer girin.");
             }
         }
 

@@ -36,11 +36,11 @@ public class MaximumStudyDurationNode extends RuleNode {
 
         // Create a panel to hold the text field
         JPanel panel = new JPanel();
-        panel.add(new JLabel("Study Duration Threshold:"));
+        panel.add(new JLabel("Eğitime Devam Süresi (Dönem)"));
         panel.add(semesterField);
 
         // Show a dialog box with the panel
-        int result = JOptionPane.showConfirmDialog(this.panel, panel, "Configure Study Duration Threshold",
+        int result = JOptionPane.showConfirmDialog(this.panel, panel, "Eğitim Süresi Ayarla",
                 JOptionPane.OK_CANCEL_OPTION,
                 JOptionPane.PLAIN_MESSAGE);
 
@@ -51,7 +51,7 @@ public class MaximumStudyDurationNode extends RuleNode {
                 updateText(); // Update the text to reflect the new value
 
             } catch (NumberFormatException nfe) {
-                JOptionPane.showMessageDialog(this.panel, "Please enter a valid number.");
+                JOptionPane.showMessageDialog(this.panel, "Geçersiz değer! Lütfen sayısal bir değer girin.");
             }
         }
 
@@ -60,7 +60,7 @@ public class MaximumStudyDurationNode extends RuleNode {
 
     @Override
     public String getText() {
-        return "Study Duration >= " + semesterCount;
+        return "Eğitim Süresi (Dönem)>= " + semesterCount;
     }
 
     @Override
@@ -78,7 +78,7 @@ public class MaximumStudyDurationNode extends RuleNode {
 
         // Draw the text
 
-        String text1 = "Study Duration " + ">= " + semesterCount;
+        String text1 = "Eğitim Süresi (Dönem)" + ">= " + semesterCount;
 
         g.setColor(Color.BLACK);
         g.setFont(new Font("Arial", Font.BOLD, 10));
