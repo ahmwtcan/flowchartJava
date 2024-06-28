@@ -60,7 +60,7 @@ public class MaximumStudyDurationNode extends RuleNode {
 
     @Override
     public String getText() {
-        return "Eğitim Süresi (Dönem)>= " + semesterCount;
+        return "Eğitim Süresi (Dönem) >= " + semesterCount;
     }
 
     @Override
@@ -78,7 +78,7 @@ public class MaximumStudyDurationNode extends RuleNode {
 
         // Draw the text
 
-        String text1 = "Eğitim Süresi (Dönem)" + ">= " + semesterCount;
+        String text1 = "Eğitim Süresi (Dönem)" + " >= " + semesterCount;
 
         g.setColor(Color.BLACK);
         g.setFont(new Font("Arial", Font.BOLD, 10));
